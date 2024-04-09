@@ -1,17 +1,20 @@
 from util import bank
 
-data = []
+# data = []
 
 
 def create_users(n):
+    data = []
     for i in range(n):
         data.append(dict(rabbits=0, sheep=0, pigs=0, cows=0, horses=0, small_dogs=0, big_dogs=0))
     return data
 # end def
 
 
-def add_animals(user_id, res1, res2):
+def add_animals(data, user_id, res1, res2):
+    print(user_id, res1, res2)
     if res1 == res2:
+        print("Pierwszy")
         if data[user_id][res1] == 0:
             data[user_id][res1] = min(1, bank[res1])
             bank[res1] = max(bank[res1] - 1, 0)
@@ -24,6 +27,7 @@ def add_animals(user_id, res1, res2):
         return
 
     if res1 == "fox" or res2 == "fox":
+        print("Drugi")
         if data[user_id]["small_dogs"] > 0:
             data[user_id]["small_dogs"] -= 1
             bank["small_dogs"] += 1
@@ -46,24 +50,27 @@ def add_animals(user_id, res1, res2):
             data[user_id]["pigs"] = 0
             data[user_id]["cows"] = 0
 
+    print(res1, res2)
     if res1 != "fox" and res1 != "wolf" and data[user_id][res1] > 0:
+        print("Trzeci")
         data[user_id][res1] += min(1, bank[res1])
         bank[res1] -= min(1, bank[res1])
         reproduction = min(bank[res1], data[user_id][res1] // 2)
         data[user_id][res1] += reproduction
         bank[res1] -= reproduction
     if res2 != "fox" and res2 != "wolf" and data[user_id][res2] > 0:
+        print("Czwarty")
         data[user_id][res2] += min(1, bank[res2])
         bank[res2] -= min(1, bank[res2])
         reproduction = min(bank[res2], data[user_id][res2] // 2)
         data[user_id][res2] += reproduction
         bank[res2] -= reproduction
-
+    print(data)
     # print(data[user_id][res1], data[user_id][res2])
 # end def
 
 
-def buy_small_dog(user_id):
+def buy_small_dog(data, user_id):
     if data[user_id]["sheep"] < 1:
         print("Masz za mało owiec, żeby kupić małego psa!");
         return
@@ -72,7 +79,7 @@ def buy_small_dog(user_id):
 # end def
 
 
-def buy_big_dog(user_id):
+def buy_big_dog(data, user_id):
     if data[user_id]["cows"] < 1:
         print("Masz za mało krów, żeby kupić dużego psa!")
         return
@@ -80,4 +87,4 @@ def buy_big_dog(user_id):
     data[user_id]["big_dogs"] += 1
 #end def
 
-# def exchange_animals()
+#def exchange_animals(user_id, an1, an2):
