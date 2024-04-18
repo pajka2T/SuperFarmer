@@ -5,7 +5,7 @@ import time
 import players_data as pd
 import util
 
-data = []
+# data = []
 
 
 # def give_image(key):
@@ -57,19 +57,19 @@ class AppClass:
         py.init()
 
 
-        WINWIDTH = 800
-        WINHEIGHT = 500
+        WINWIDTH = 1200
+        WINHEIGHT = 800
         WINSIZE = (WINWIDTH, WINHEIGHT)
 
-        CELLWIDTH = 50
-        CELLHEIGHT = 50
+        CELLWIDTH = 70
+        CELLHEIGHT = 70
         CELLSIZE = (CELLWIDTH, CELLHEIGHT)
 
-        CELLMARGINX = 5  # number of pixels to the left and right of each cell
-        CELLMARGINY = 5  # number of pixels to the top and bottom of each cell
+        CELLMARGINX = 10  # number of pixels to the left and right of each cell
+        CELLMARGINY = 10  # number of pixels to the top and bottom of each cell
 
-        SCREENPADX = 80  # number of pixels between the GRID and the left and right of the window
-        SCREENPADY = 80  # number of pixels between the GRID and the top and bottom of the window
+        SCREENPADX = int(0.1 * WINWIDTH)  # number of pixels between the GRID and the left and right of the window
+        SCREENPADY = int(0.15 * WINHEIGHT)  # number of pixels between the GRID and the top and bottom of the window
 
         WHITE = (255, 255, 255)
         BLACK = (0, 0, 0)
@@ -79,8 +79,8 @@ class AppClass:
         DONE = False  # is our program finished running?
 
         # information about the two buttons (red and green)
-        SECONDPLAYERCUBEBUTTON = (450, 400, 200, 50)
-        FIRSTPLAYERCUBEBUTTON = (150, 400, 200, 50)
+        SECONDPLAYERCUBEBUTTON = (int(WINWIDTH - 0.4 * (WINWIDTH - 400) - 200), 650, 200, 50)
+        FIRSTPLAYERCUBEBUTTON = (int(0.4 * (WINWIDTH - 400)), 650, 200, 50)
         FIRSTCOLOR = GREEN
         SECONDCOLOR = RED
 
@@ -99,7 +99,7 @@ class AppClass:
                                  (SCREENPADX + x * (CELLWIDTH + CELLMARGINX), SCREENPADY + y * (CELLHEIGHT + CELLMARGINY), CELLWIDTH, CELLHEIGHT))
         py.display.flip()
         # setting up the GRID
-        # cells can be accessed by GRID[row][col] ie. GRID[3][4] is the 3rd row and 4th column
+        # cells can be accessed by GRID[row][col] i.e. GRID[3][4] is the 3rd row and 4th column
         # each cell contains [x, y, color]
         # where x is the x position on the screen
         #       y is the y position on the screen
@@ -123,15 +123,16 @@ class AppClass:
                         # print("TUU")
                         FIRSTCOLOR = RED
                         SECONDCOLOR = GREEN
-                        pd.add_animals(data, 0, *util.rand_animals())
+                        pd.add_animals(0, *util.rand_animals())
                         print("AAA")
+                        print(pd.data)
                         i = 0
-                        for key in data[0]:
+                        for key in pd.data[0]:
                             if key == "small_dogs" or key == "big_dogs":
                                 continue
                             # print("W forze")
                             # print(data[0][key])
-                            no_anim = data[0][key]
+                            no_anim = pd.data[0][key]
                             y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
                             j = 0
                             while j < 5:
@@ -154,15 +155,16 @@ class AppClass:
                             and SECONDCOLOR == GREEN):
                         SECONDCOLOR = RED
                         FIRSTCOLOR = GREEN
-                        pd.add_animals(data, 1, *util.rand_animals())
+                        pd.add_animals(1, *util.rand_animals())
                         print("AAA")
+                        print(pd.data)
                         i = 0
-                        for key in data[1]:
+                        for key in pd.data[1]:
                             if key == "small_dogs" or key == "big_dogs":
                                 continue
                             # print("W forze")
                             # print(data[0][key])
-                            no_anim = data[1][key]
+                            no_anim = pd.data[1][key]
                             y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
                             j = 0
                             while j < 5:
@@ -187,7 +189,7 @@ class AppClass:
 
                             # CURRENTCOLOR = GREEN
 
-                        # calculations for clicking cells
+                    # calculations for clicking cells
 
                     mpos_x -= SCREENPADX  # mouse position relative to the upper left cell
                     mpos_y -= SCREENPADY  # ^ same
@@ -195,22 +197,22 @@ class AppClass:
                     col = mpos_x // (CELLWIDTH + CELLMARGINX)  # which cell is the mouse clicking
                     row = mpos_y // (CELLHEIGHT + CELLMARGINY)  # ^ same
 
-                        # make sure the user clicked on the GRID area
-                        # if row >= 0 and col >= 0:
-                        #     try:
-                        #         # calculate the boundaries of the cell
-                        #         cell_x_min, cell_y_min = col * (CELLHEIGHT + CELLMARGINY), row * (
-                        #                     CELLWIDTH + CELLMARGINX)
-                        #         cell_x_max = cell_x_min + CELLWIDTH
-                        #         cell_y_max = cell_y_min + CELLHEIGHT
-                        #         # now we will see if the user clicked the cell or the margin
-                        #         if cell_x_min <= mpos_x <= cell_x_max and cell_y_min <= mpos_y <= cell_y_max:
-                        #             GRID[row][col][2] = CURRENTCOLOR if event.button == 1 else WHITE
-                        #         else:
-                        #             # the user has clicked the margin, so we do nothing
-                        #             pass
-                        #     except IndexError:  # clicked outside of the GRID
-                        #         pass  # we will do nothing
+                    # make sure the user clicked on the GRID area
+                    # if row >= 0 and col >= 0:
+                    #     try:
+                    #         # calculate the boundaries of the cell
+                    #         cell_x_min, cell_y_min = col * (CELLHEIGHT + CELLMARGINY), row * (
+                    #                     CELLWIDTH + CELLMARGINX)
+                    #         cell_x_max = cell_x_min + CELLWIDTH
+                    #         cell_y_max = cell_y_min + CELLHEIGHT
+                    #         # now we will see if the user clicked the cell or the margin
+                    #         if cell_x_min <= mpos_x <= cell_x_max and cell_y_min <= mpos_y <= cell_y_max:
+                    #             GRID[row][col][2] = CURRENTCOLOR if event.button == 1 else WHITE
+                    #         else:
+                    #             # the user has clicked the margin, so we do nothing
+                    #             pass
+                    #     except IndexError:  # clicked outside the GRID
+                    #         pass  # we will do nothing
 
                 # logic goes here
 
@@ -230,8 +232,10 @@ class AppClass:
 
 
 if __name__ == '__main__':
-    data = pd.create_users(2)
-    print(data)
+    pd.create_users(2)
+    pd.data[0]["rabbits"] = 6
+    pd.add_animals(0, "fox", "rabbits")
+    print(pd.data)
     # data[0]["rabbits"] = 5
     # data[0]["sheep"] = 2
     # data[0]["pigs"] = 1

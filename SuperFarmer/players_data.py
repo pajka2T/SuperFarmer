@@ -1,17 +1,17 @@
 from util import bank
 
-# data = []
+data = []
 
 
 def create_users(n):
-    data = []
+    # data = []
     for i in range(n):
         data.append(dict(rabbits=0, sheep=0, pigs=0, cows=0, horses=0, small_dogs=0, big_dogs=0))
-    return data
+    # return data
 # end def
 
 
-def add_animals(data, user_id, res1, res2):
+def add_animals(user_id, res1, res2):
     print(user_id, res1, res2)
     if res1 == res2:
         print("Pierwszy")
@@ -35,6 +35,7 @@ def add_animals(data, user_id, res1, res2):
             rabbits_to_bank = max(data[user_id]["rabbits"] - 1, 0)
             bank["rabbits"] += rabbits_to_bank
             data[user_id]["rabbits"] = min(data[user_id]["rabbits"], 1)
+            return
     if res1 == "wolf" or res2 == "wolf":
         if data[user_id]["big_dogs"] > 0:
             data[user_id]["big_dogs"] -= 1
@@ -49,8 +50,8 @@ def add_animals(data, user_id, res1, res2):
             data[user_id]["sheep"] = 0
             data[user_id]["pigs"] = 0
             data[user_id]["cows"] = 0
+            return
 
-    print(res1, res2)
     if res1 != "fox" and res1 != "wolf" and data[user_id][res1] > 0:
         print("Trzeci")
         data[user_id][res1] += min(1, bank[res1])
@@ -65,12 +66,11 @@ def add_animals(data, user_id, res1, res2):
         reproduction = min(bank[res2], data[user_id][res2] // 2)
         data[user_id][res2] += reproduction
         bank[res2] -= reproduction
-    print(data)
     # print(data[user_id][res1], data[user_id][res2])
 # end def
 
 
-def buy_small_dog(data, user_id):
+def buy_small_dog(user_id):
     if data[user_id]["sheep"] < 1:
         print("Masz za mało owiec, żeby kupić małego psa!");
         return
@@ -79,7 +79,7 @@ def buy_small_dog(data, user_id):
 # end def
 
 
-def buy_big_dog(data, user_id):
+def buy_big_dog(user_id):
     if data[user_id]["cows"] < 1:
         print("Masz za mało krów, żeby kupić dużego psa!")
         return
