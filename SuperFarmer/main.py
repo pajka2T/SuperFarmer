@@ -3,9 +3,9 @@ from pygame.locals import *
 import time
 
 import players_data as pd
+from players_data import create_users
 import util
-
-data = []
+from util import convert_animal_to_img
 
 
 # def give_image(key):
@@ -31,18 +31,6 @@ class ImageGrid:
 
 class AppClass:
     def __init__(self):
-
-        # for y in range(5):
-        #     row = []
-        #     for x in range(12):
-        #         if x == 5 or x == 6:
-        #             row.append(
-        #                 [x * (CELLWIDTH + CELLMARGINX) + SCREENPADX, y * (CELLHEIGHT + CELLMARGINY) + SCREENPADY,
-        #                  BLACK])
-        #         else:
-        #             row.append(
-        #                 [x * (CELLWIDTH + CELLMARGINX) + SCREENPADX, y * (CELLHEIGHT + CELLMARGINY) + SCREENPADY, WHITE])
-        #     GRID.append(row)
 
         # main loop
 
@@ -104,7 +92,19 @@ class AppClass:
         # where x is the x position on the screen
         #       y is the y position on the screen
         #       color is the current color of the cell
-        # GRID = []
+        GRID = []
+
+        for y in range(5):
+            row = []
+            for x in range(12):
+                if x == 5 or x == 6:
+                    row.append(
+                        [x * (CELLWIDTH + CELLMARGINX) + SCREENPADX, y * (CELLHEIGHT + CELLMARGINY) + SCREENPADY,
+                         BLACK])
+                else:
+                    row.append(
+                        [x * (CELLWIDTH + CELLMARGINX) + SCREENPADX, y * (CELLHEIGHT + CELLMARGINY) + SCREENPADY, WHITE])
+            GRID.append(row)
 
         while AppClass.running:
             for event in py.event.get():
@@ -123,22 +123,21 @@ class AppClass:
                         # print("TUU")
                         FIRSTCOLOR = RED
                         SECONDCOLOR = GREEN
-                        pd.add_animals(data, 0, *util.rand_animals())
+                        #pd.add_animals(data, 0, *util.rand_animals())
+                        players[0].add_animals(*util.rand_animals())
                         print("AAA")
                         i = 0
-                        for key in data[0]:
-                            if key == "small_dogs" or key == "big_dogs":
-                                continue
+                        for key in players[0].animals:
                             # print("W forze")
                             # print(data[0][key])
-                            no_anim = data[0][key]
+                            no_anim = players[0].animals[key]
                             y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
                             j = 0
                             while j < 5:
                                 # print(i, j)
                                 x = SCREENPADX + j * (CELLWIDTH + CELLMARGINX)
                                 if j < no_anim:
-                                    image = py.image.load('Images/' + key + '.jpg').convert_alpha()
+                                    image = py.image.load("Images/" + convert_animal_to_img(key)).convert_alpha()
                                     ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
                                 else:
                                     py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
@@ -154,22 +153,21 @@ class AppClass:
                             and SECONDCOLOR == GREEN):
                         SECONDCOLOR = RED
                         FIRSTCOLOR = GREEN
-                        pd.add_animals(data, 1, *util.rand_animals())
+                        #pd.add_animals(data, 1, *util.rand_animals())
+                        players[1].add_animals(*util.rand_animals())
                         print("AAA")
                         i = 0
-                        for key in data[1]:
-                            if key == "small_dogs" or key == "big_dogs":
-                                continue
+                        for key in players[1].animals:
                             # print("W forze")
                             # print(data[0][key])
-                            no_anim = data[1][key]
+                            no_anim = players[1].animals[key]
                             y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
                             j = 0
                             while j < 5:
                                 # print(i, j)
                                 x = SCREENPADX + (j + 7) * (CELLWIDTH + CELLMARGINX)
                                 if j < no_anim:
-                                    image = py.image.load('Images/' + key + '.jpg').convert_alpha()
+                                    image = py.image.load('Images/' + convert_animal_to_img(key)).convert_alpha()
                                     ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
                                 else:
                                     py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
@@ -182,7 +180,7 @@ class AppClass:
                             # for i in range(5):
                             #     x = SCREENPADX + i * (CELLWIDTH + CELLMARGINX)
                             #     y = SCREENPADY
-                            #     image = py.image.load('rabbits.jpg').convert_alpha()
+                            #     image = py.image.load('rabbit.jpg').convert_alpha()
                             #     ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
 
                             # CURRENTCOLOR = GREEN
@@ -230,8 +228,8 @@ class AppClass:
 
 
 if __name__ == '__main__':
-    data = pd.create_users(2)
-    print(data)
+    players = create_users(2)
+    print(players)
     # data[0]["rabbits"] = 5
     # data[0]["sheep"] = 2
     # data[0]["pigs"] = 1

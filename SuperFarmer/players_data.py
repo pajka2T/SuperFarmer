@@ -1,90 +1,101 @@
-from util import bank
+from util import bank, Predators
+from util import Animal
+from util import Defence
 
 # data = []
 
 
+class Player:
+    def __init__(self, id):
+        self.id = id
+        self.animals = {Animal.RABBIT: 0, Animal.SHEEP: 0, Animal.PIG: 0, Animal.COW: 0, Animal.HORSE: 0}
+        self.dogs = {Defence.SMALLDOG: 0, Defence.BIGDOG: 0}
+
+    def add_animals(self, animal1, animal2):
+        print(animal1, animal2)
+
+        # Oba zwierzęta są hodowlane
+        if isinstance(animal1, Animal) and isinstance(animal2, Animal):
+            if animal1 == animal2:
+                if self.animals[animal1] == 0:
+                    self.animals[animal1] = min(1, bank[animal1])
+                    bank[animal1] = max(bank[animal1] - 1, 0)
+                else:
+                    self.animals[animal1] += min(2, bank[animal1])
+                    bank[animal1] -= min(2, bank[animal1])
+                    reproduction = min(bank[animal1], self.animals[animal1] // 2)
+                    self.animals[animal1] += reproduction
+                    bank[animal1] -= reproduction
+                return
+        if isinstance(animal1, Animal) and self.animals[animal1] > 0:
+            print("Trzeci")
+            self.animals[animal1] += min(1, bank[animal1])
+            bank[animal1] -= min(1, bank[animal1])
+            reproduction = min(bank[animal1], self.animals[animal1] // 2)
+            self.animals[animal1] += reproduction
+            bank[animal1] -= reproduction
+        if isinstance(animal2, Animal) and self.animals[animal2] > 0:
+            print("Czwarty")
+            self.animals[animal2] += min(1, bank[animal2])
+            bank[animal2] -= min(1, bank[animal2])
+            reproduction = min(bank[animal2], self.animals[animal2] // 2)
+            self.animals[animal2] += reproduction
+            bank[animal2] -= reproduction
+
+        # Sprawdzenie, czy zwierzęta nie są drapieżnikami
+        if animal1 == Predators.FOX or animal2 == Predators.FOX:
+            print("Drugi")
+            if self.dogs[Defence.SMALLDOG] > 0:
+                self.dogs[Defence.SMALLDOG] -= 1
+                bank[Defence.SMALLDOG] += 1
+            else:
+                rabbits_to_bank = max(self.animals[Animal.RABBIT] - 1, 0)
+                bank[Animal.RABBIT] += rabbits_to_bank
+                self.animals[Animal.RABBIT] = min(self.animals[Animal.RABBIT], 1)
+        if animal1 == Predators.WOLF or animal2 == Predators.WOLF:
+            if self.dogs[Defence.BIGDOG] > 0:
+                self.dogs[Defence.BIGDOG] -= 1
+                bank[Defence.BIGDOG] += 1
+            else:
+                sheep_to_bank = max(self.animals[Animal.SHEEP] - 1, 0)
+                bank[Animal.SHEEP] += sheep_to_bank
+                pigs_to_bank = max(self.animals[Animal.PIG] - 1, 0)
+                bank[Animal.PIG] += pigs_to_bank
+                cows_to_bank = max(self.animals[Animal.COW] - 1, 0)
+                bank[Animal.COW] += cows_to_bank
+                self.animals[Animal.SHEEP] = 0
+                self.animals[Animal.PIG] = 0
+                self.animals[Animal.COW] = 0
+
+        print(self.animals)
+        return
+
+    def buy_small_dog(self):
+        if self.animals[Animal.SHEEP] < 1:
+            print("Masz za mało owiec, żeby kupić małego psa!");
+            return
+        self.animals[Animal.SHEEP] -= 1
+        self.dogs[Defence.SMALLDOG] += 1
+
+    # end def
+
+    def buy_big_dog(self):
+        if self.animals[Animal.COW] < 1:
+            print("Masz za mało krów, żeby kupić dużego psa!")
+            return
+        self.animals[Animal.COW] -= 1
+        self.dogs[Defence.BIGDOG] += 1
+    # end def
+# end class
+
+
 def create_users(n):
-    data = []
-    for i in range(n):
-        data.append(dict(rabbits=0, sheep=0, pigs=0, cows=0, horses=0, small_dogs=0, big_dogs=0))
-    return data
+    players = []
+    for i in range(1, n+1):
+        newPlayer = Player(i)
+        players.append(newPlayer)
+    return players
 # end def
 
 
-def add_animals(data, user_id, res1, res2):
-    print(user_id, res1, res2)
-    if res1 == res2:
-        print("Pierwszy")
-        if data[user_id][res1] == 0:
-            data[user_id][res1] = min(1, bank[res1])
-            bank[res1] = max(bank[res1] - 1, 0)
-        else:
-            data[user_id][res1] += min(2, bank[res1])
-            bank[res1] -= min(2, bank[res1])
-            reproduction = min(bank[res1], data[user_id][res1] // 2)
-            data[user_id][res1] += reproduction
-            bank[res1] -= reproduction
-        return
-
-    if res1 == "fox" or res2 == "fox":
-        print("Drugi")
-        if data[user_id]["small_dogs"] > 0:
-            data[user_id]["small_dogs"] -= 1
-            bank["small_dogs"] += 1
-        else:
-            rabbits_to_bank = max(data[user_id]["rabbits"] - 1, 0)
-            bank["rabbits"] += rabbits_to_bank
-            data[user_id]["rabbits"] = min(data[user_id]["rabbits"], 1)
-    if res1 == "wolf" or res2 == "wolf":
-        if data[user_id]["big_dogs"] > 0:
-            data[user_id]["big_dogs"] -= 1
-            bank["big_dogs"] += 1
-        else:
-            sheep_to_bank = max(data[user_id]["sheep"] - 1, 0)
-            bank["sheep"] += sheep_to_bank
-            pigs_to_bank = max(data[user_id]["pigs"] - 1, 0)
-            bank["pigs"] += pigs_to_bank
-            cows_to_bank = max(data[user_id]["cows"] - 1, 0)
-            bank["cows"] += cows_to_bank
-            data[user_id]["sheep"] = 0
-            data[user_id]["pigs"] = 0
-            data[user_id]["cows"] = 0
-
-    print(res1, res2)
-    if res1 != "fox" and res1 != "wolf" and data[user_id][res1] > 0:
-        print("Trzeci")
-        data[user_id][res1] += min(1, bank[res1])
-        bank[res1] -= min(1, bank[res1])
-        reproduction = min(bank[res1], data[user_id][res1] // 2)
-        data[user_id][res1] += reproduction
-        bank[res1] -= reproduction
-    if res2 != "fox" and res2 != "wolf" and data[user_id][res2] > 0:
-        print("Czwarty")
-        data[user_id][res2] += min(1, bank[res2])
-        bank[res2] -= min(1, bank[res2])
-        reproduction = min(bank[res2], data[user_id][res2] // 2)
-        data[user_id][res2] += reproduction
-        bank[res2] -= reproduction
-    print(data)
-    # print(data[user_id][res1], data[user_id][res2])
-# end def
-
-
-def buy_small_dog(data, user_id):
-    if data[user_id]["sheep"] < 1:
-        print("Masz za mało owiec, żeby kupić małego psa!");
-        return
-    data[user_id]["sheep"] -= 1
-    data[user_id]["small_dogs"] += 1
-# end def
-
-
-def buy_big_dog(data, user_id):
-    if data[user_id]["cows"] < 1:
-        print("Masz za mało krów, żeby kupić dużego psa!")
-        return
-    data[user_id]["cows"] -= 1
-    data[user_id]["big_dogs"] += 1
-#end def
-
-#def exchange_animals(user_id, an1, an2):
+#def exchange_animals(user_id, animal1, animal2):
