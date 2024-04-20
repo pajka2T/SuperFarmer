@@ -8,24 +8,15 @@ import util
 from util import convert_animal_to_img
 
 
-# def give_image(key):
-#     if key == "rabbits":
-#         return 'bunny.jpg'
-#     if key == "sheep":
-#         return 'sheep.jpg'
-
-
 class ImageGrid:
 
     def __init__( self, x, y, image, new_size ):
-        #print("UUU")
         self.image  = py.transform.scale(image, (new_size, new_size))
         self.rect   = image.get_rect()  # copy the image dimensions
         self.rect.x = x
         self.rect.y = y                 # move to location
 
     def draw( self, window ):
-        #print("HALO")
         window.blit( self.image, self.rect )    # paint it
 
 
@@ -123,25 +114,20 @@ class AppClass:
                         # print("TUU")
                         FIRSTCOLOR = RED
                         SECONDCOLOR = GREEN
-                        #pd.add_animals(data, 0, *util.rand_animals())
                         players[0].add_animals(*util.rand_animals())
                         print("AAA")
                         i = 0
                         for key in players[0].animals:
-                            # print("W forze")
-                            # print(data[0][key])
                             no_anim = players[0].animals[key]
                             y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
                             j = 0
                             while j < 5:
-                                # print(i, j)
                                 x = SCREENPADX + j * (CELLWIDTH + CELLMARGINX)
                                 if j < no_anim:
                                     image = py.image.load("Images/" + convert_animal_to_img(key)).convert_alpha()
                                     ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
                                 else:
                                     py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
-                                    # print(x, y, x+CELLWIDTH, y+CELLHEIGHT)
                                 j += 1
                             i += 1
                         #py.display.flip()
@@ -153,25 +139,20 @@ class AppClass:
                             and SECONDCOLOR == GREEN):
                         SECONDCOLOR = RED
                         FIRSTCOLOR = GREEN
-                        #pd.add_animals(data, 1, *util.rand_animals())
                         players[1].add_animals(*util.rand_animals())
                         print("AAA")
                         i = 0
                         for key in players[1].animals:
-                            # print("W forze")
-                            # print(data[0][key])
                             no_anim = players[1].animals[key]
                             y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
                             j = 0
                             while j < 5:
-                                # print(i, j)
                                 x = SCREENPADX + (j + 7) * (CELLWIDTH + CELLMARGINX)
                                 if j < no_anim:
                                     image = py.image.load('Images/' + convert_animal_to_img(key)).convert_alpha()
                                     ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
                                 else:
                                     py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
-                                    # print(x, y, x+CELLWIDTH, y+CELLHEIGHT)
                                 j += 1
                             i += 1
                         #py.display.flip()
@@ -230,28 +211,5 @@ class AppClass:
 if __name__ == '__main__':
     players = create_users(2)
     print(players)
-    # data[0]["rabbits"] = 5
-    # data[0]["sheep"] = 2
-    # data[0]["pigs"] = 1
-    # data[0]["cows"] = 1
-    # data[0]["horses"] = 1
-    # data[1]["rabbits"] = 5
-    # data[1]["sheep"] = 2
-    # data[1]["pigs"] = 1
-    # data[1]["cows"] = 1
-    # data[1]["horses"] = 1
-    # pd.add_animals(data, 0, "rabbits", "fox")
-    # print(data[0])
 
     AppClass().play()
-    # data = pd.create_users(2)
-    # data[0]["rabbits"] = 0
-    # data[0]["sheep"] = 0
-    # for i in range(20):
-    #     res1, res2 = util.rand_animals()
-    #     print(res1, res2)
-    #     pd.add_animals(data, 0, res1, res2)
-    #     print(data[0])
-    #     print(util.bank)
-    #
-    # print(data)

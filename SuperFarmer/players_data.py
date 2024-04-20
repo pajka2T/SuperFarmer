@@ -2,6 +2,7 @@ from util import bank, Predators
 from util import Animal
 from util import Defence
 
+
 # data = []
 
 
@@ -26,6 +27,8 @@ class Player:
                     reproduction = min(bank[animal1], self.animals[animal1] // 2)
                     self.animals[animal1] += reproduction
                     bank[animal1] -= reproduction
+                print(self.animals)
+                print(bank)
                 return
         if isinstance(animal1, Animal) and self.animals[animal1] > 0:
             print("Trzeci")
@@ -57,17 +60,18 @@ class Player:
                 self.dogs[Defence.BIGDOG] -= 1
                 bank[Defence.BIGDOG] += 1
             else:
-                sheep_to_bank = max(self.animals[Animal.SHEEP] - 1, 0)
+                sheep_to_bank = self.animals[Animal.SHEEP]
                 bank[Animal.SHEEP] += sheep_to_bank
-                pigs_to_bank = max(self.animals[Animal.PIG] - 1, 0)
+                pigs_to_bank = self.animals[Animal.PIG]
                 bank[Animal.PIG] += pigs_to_bank
-                cows_to_bank = max(self.animals[Animal.COW] - 1, 0)
+                cows_to_bank = self.animals[Animal.COW]
                 bank[Animal.COW] += cows_to_bank
                 self.animals[Animal.SHEEP] = 0
                 self.animals[Animal.PIG] = 0
                 self.animals[Animal.COW] = 0
 
         print(self.animals)
+        print(bank)
         return
 
     def buy_small_dog(self):
@@ -86,6 +90,12 @@ class Player:
         self.animals[Animal.COW] -= 1
         self.dogs[Defence.BIGDOG] += 1
     # end def
+
+    def exchange_animals(self, animal_from, animal_to):
+        # TODO
+        return
+
+
 # end class
 
 
@@ -96,6 +106,3 @@ def create_users(n):
         players.append(newPlayer)
     return players
 # end def
-
-
-#def exchange_animals(user_id, animal1, animal2):
