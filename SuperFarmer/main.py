@@ -1,3 +1,4 @@
+import pygame
 import pygame as py
 from pygame.locals import *
 import time
@@ -19,14 +20,14 @@ class ImageGrid:
 
     def __init__( self, x, y, image, new_size ):
         #print("UUU")
-        self.image  = py.transform.scale(image, (new_size, new_size))
-        self.rect   = image.get_rect()  # copy the image dimensions
+        self.image = py.transform.scale(image, (new_size, new_size))
+        self.rect = image.get_rect()  # copy the image dimensions
         self.rect.x = x
         self.rect.y = y                 # move to location
 
     def draw( self, window ):
         #print("HALO")
-        window.blit( self.image, self.rect )    # paint it
+        window.blit(self.image, self.rect)    # paint it
 
 
 class AppClass:
@@ -85,7 +86,7 @@ class AppClass:
         SECONDCOLOR = RED
 
         # create the WINDOW and CLOCK
-        WINDOW = py.display.set_mode(WINSIZE)
+        WINDOW = py.display.set_mode((0,0), pygame.FULLSCREEN)
         py.display.set_caption('Super Farmer')
         CLOCK = py.time.Clock()
 
