@@ -82,20 +82,24 @@ class Player:
 
     def buy_small_dog(self):
         if self.animals[Animal.SHEEP] < 1:
-            print("Masz za mało owiec, żeby kupić małego psa!");
-            return 0
+            return -1
+        if bank[Defence.SMALLDOG] <= 0:
+            return -2
         self.animals[Animal.SHEEP] -= 1
         self.dogs[Defence.SMALLDOG] += 1
+        bank[Defence.SMALLDOG] -= 1
         return 1
 
     # end def
 
     def buy_big_dog(self):
         if self.animals[Animal.COW] < 1:
-            print("Masz za mało krów, żeby kupić dużego psa!")
-            return 0
+            return -1
+        if bank[Defence.BIGDOG] <= 0:
+            return -2
         self.animals[Animal.COW] -= 1
         self.dogs[Defence.BIGDOG] += 1
+        bank[Defence.BIGDOG] -= 1
         return 1
     # end def
 
