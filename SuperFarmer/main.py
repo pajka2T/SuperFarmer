@@ -114,7 +114,15 @@ class AppClass:
                         # print("TUU")
                         FIRSTCOLOR = RED
                         SECONDCOLOR = GREEN
-                        players[0].add_animals(*util.rand_animals())
+                        res1, res2 = players[0].add_animals(*util.rand_animals())
+                        if res1 == util.Predators.FOX:
+                            print("Oh no, there was a fox attack on player 1!")
+                        elif res1 == util.Defence.SMALLDOG:
+                            print("The small dog saved player 2 from fox attack!")
+                        if res2 == util.Predators.WOLF:
+                            print("Oh no, there was a wolf attack on player 2!")
+                        elif res2 == util.Defence.BIGDOG:
+                            print("The big dog saved player 2 from wolf attack!")
                         print("AAA")
                         i = 0
                         for key in players[0].animals:
@@ -139,8 +147,15 @@ class AppClass:
                             and SECONDCOLOR == GREEN):
                         SECONDCOLOR = RED
                         FIRSTCOLOR = GREEN
-                        players[1].add_animals(*util.rand_animals())
-                        print("AAA")
+                        res1, res2 = players[1].add_animals(*util.rand_animals())
+                        if res1 == util.Predators.FOX:
+                            print("Oh no, there was a fox attack on player 2!")
+                        elif res1 == util.Defence.SMALLDOG:
+                            print("The small dog saved player 2 from fox attack!")
+                        if res2 == util.Predators.WOLF:
+                            print("Oh no, there was a wolf attack on player 2!")
+                        elif res2 == util.Defence.BIGDOG:
+                            print("The big dog saved player 2 from wolf attack!")
                         i = 0
                         for key in players[1].animals:
                             no_anim = players[1].animals[key]
