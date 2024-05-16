@@ -26,6 +26,12 @@ class Predators(Enum):
 bank = {Animal.RABBIT: 60, Animal.SHEEP: 24, Animal.PIG: 20, Animal.COW: 12, Animal.HORSE: 6,
         Defence.SMALLDOG: 4, Defence.BIGDOG: 2}
 
+exchange_cost = {Animal.RABBIT: {Animal.SHEEP: 6, Animal.PIG: 12, Animal.COW: 36, Animal.HORSE: 72},
+                 Animal.SHEEP: {Animal.PIG: 2, Animal.COW: 6, Animal.HORSE: 12},
+                 Animal.PIG: {Animal.COW: 3, Animal.HORSE: 6},
+                 Animal.COW: {Animal.HORSE: 2},
+                 Animal.HORSE: {}}
+
 animals1 = [Animal.RABBIT, Animal.RABBIT, Animal.RABBIT, Animal.RABBIT,
             Animal.SHEEP, Animal.SHEEP, Animal.SHEEP,
             Animal.PIG, Animal.PIG, Animal.PIG,
