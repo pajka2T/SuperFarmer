@@ -60,6 +60,10 @@ class AppClass:
         # information about the two buttons (red and green)
         SECONDPLAYERCUBEBUTTON = (450, 400, 200, 50)
         FIRSTPLAYERCUBEBUTTON = (150, 400, 200, 50)
+
+        SMALLDOGBUTTON = (0.7*WINWIDTH, 0.05*WINHEIGHT, 80, 50)
+        BIGDOGBUTTON = (0.85*WINWIDTH, 0.05*WINHEIGHT, 80, 50)
+
         FIRSTCOLOR = GREEN
         SECONDCOLOR = RED
 
@@ -67,6 +71,13 @@ class AppClass:
         WINDOW = py.display.set_mode(WINSIZE)
         py.display.set_caption('Super Farmer')
         CLOCK = py.time.Clock()
+
+        image = py.image.load('Images/smalldog.png').convert_alpha()
+        ImageGrid(0.7*WINWIDTH, 0.05*WINHEIGHT, image, CELLWIDTH).draw(WINDOW)
+        image = py.image.load('Images/bigdog.png').convert_alpha()
+        ImageGrid(0.85*WINWIDTH, 0.05*WINHEIGHT, image, CELLWIDTH).draw(WINDOW)
+
+
 
         for y in range(5):
             for x in range(12):
@@ -77,25 +88,8 @@ class AppClass:
                     py.draw.rect(WINDOW, WHITE,
                                  (SCREENPADX + x * (CELLWIDTH + CELLMARGINX), SCREENPADY + y * (CELLHEIGHT + CELLMARGINY), CELLWIDTH, CELLHEIGHT))
         py.display.flip()
-        # setting up the GRID
-        # cells can be accessed by GRID[row][col] ie. GRID[3][4] is the 3rd row and 4th column
-        # each cell contains [x, y, color]
-        # where x is the x position on the screen
-        #       y is the y position on the screen
-        #       color is the current color of the cell
-        GRID = []
 
-        for y in range(5):
-            row = []
-            for x in range(12):
-                if x == 5 or x == 6:
-                    row.append(
-                        [x * (CELLWIDTH + CELLMARGINX) + SCREENPADX, y * (CELLHEIGHT + CELLMARGINY) + SCREENPADY,
-                         BLACK])
-                else:
-                    row.append(
-                        [x * (CELLWIDTH + CELLMARGINX) + SCREENPADX, y * (CELLHEIGHT + CELLMARGINY) + SCREENPADY, WHITE])
-            GRID.append(row)
+        turn = 0
 
         while AppClass.running:
             for event in py.event.get():
@@ -138,6 +132,7 @@ class AppClass:
                                     py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
                                 j += 1
                             i += 1
+                        turn = (turn+1)%2
                         #py.display.flip()
 
                     # check if REDBUTTON was clicked
@@ -170,18 +165,23 @@ class AppClass:
                                     py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
                                 j += 1
                             i += 1
-                        #py.display.flip()
+                        turn = (turn+1)%2
 
 
-                            # for i in range(5):
-                            #     x = SCREENPADX + i * (CELLWIDTH + CELLMARGINX)
-                            #     y = SCREENPADY
-                            #     image = py.image.load('rabbit.jpg').convert_alpha()
-                            #     ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
+                    if 0.7*WINWIDTH <= mpos_x <= 0.7*WINWIDTH+50 and 0.1*WINHEIGHT <= mpos_y <= 0.1*WINHEIGHT+50:
+                        # Small dog icon clicked
+                        print("Small dog")
+                        print(players[turn].animals)
+                        print(players[turn].buy_small_dog())
+                        print(players[turn].dogs)
+                    if 0.85*WINWIDTH <= mpos_x <= 0.85*WINWIDTH+50 and 0.1*WINHEIGHT <= mpos_y <= 0.1*WINHEIGHT+50:
+                        # Big dog icon clicked
+                        print("Big dog")
+                        print(players[turn].animals)
+                        print(players[turn].buy_big_dog())
+                        print(players[turn].dogs)
 
-                            # CURRENTCOLOR = GREEN
 
-                        # calculations for clicking cells
 
                     mpos_x -= SCREENPADX  # mouse position relative to the upper left cell
                     mpos_y -= SCREENPADY  # ^ same
@@ -210,6 +210,8 @@ class AppClass:
 
             py.draw.rect(WINDOW, FIRSTCOLOR, FIRSTPLAYERCUBEBUTTON)
             py.draw.rect(WINDOW, SECONDCOLOR, SECONDPLAYERCUBEBUTTON)
+            # py.draw.rect(WINDOW, GREEN, SMALLDOGBUTTON)
+            # py.draw.rect(WINDOW, GREEN, BIGDOGBUTTON)
 
                 # for row in GRID:
                 #     for x, y, color in row:
