@@ -28,7 +28,7 @@ class Player:
                 self.animals[animal1] += reproduction
                 bank[animal1] -= reproduction
             print(self.animals)
-            print(bank)
+            print("Bank: ", bank)
             return "OK", "OK"
         if isinstance(animal1, Animal) and self.animals[animal1] > 0:
             print("Trzeci")

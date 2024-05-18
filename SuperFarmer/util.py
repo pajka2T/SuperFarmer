@@ -1,13 +1,14 @@
 import random
 from enum import Enum
+import pygame as py
 
 
 class Animal(Enum):
-    RABBIT = 1
-    SHEEP = 2
-    PIG = 3
-    COW = 4
-    HORSE = 5
+    RABBIT = 0
+    SHEEP = 1
+    PIG = 2
+    COW = 3
+    HORSE = 4
 # end enum
 
 
@@ -53,16 +54,17 @@ def rand_animals():
 # end def
 
 
-def convert_animal_to_img(animal):
-    if animal == Animal.RABBIT:
-        return "rabbit.jpg"
-    if animal == Animal.SHEEP:
-        return "sheep.jpg"
-    if animal == Animal.PIG:
-        return "pig.jpg"
-    if animal == Animal.COW:
-        return "cow.jpg"
-    if animal == Animal.HORSE:
-        return "horse.jpg"
-    return
+def convert_animal_to_img(animal_number):
+    img = None
+    if animal_number == Animal.RABBIT.value:
+        img = py.image.load("Images/bunny.png")
+    if animal_number == Animal.SHEEP.value:
+        img = py.image.load("Images/sheep.png")
+    if animal_number == Animal.PIG.value:
+        img = py.image.load("Images/pig.png")
+    if animal_number == Animal.COW.value:
+        img = py.image.load("Images/cow.png")
+    if animal_number == Animal.HORSE.value:
+        img = py.image.load("Images/horse.png")
+    return img
 # end def
