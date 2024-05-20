@@ -135,8 +135,8 @@ class Player:
 
 def create_users(n):
     players = []
-    for i in range(1, n+1):
-        newPlayer = Player(i)
-        players.append(newPlayer)
+    for i in range(0, n):
+        new_player = Player(i)
+        players.append(new_player)
     return players
 # end def

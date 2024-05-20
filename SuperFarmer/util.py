@@ -3,6 +3,19 @@ from enum import Enum
 import pygame as py
 
 
+class Image:
+
+    def __init__(self, x, y, image, width, height):
+        self.image  = py.transform.scale(image, (width, height))
+        self.rect   = image.get_rect()  # copy the image dimensions
+        #print("UUU")
+        self.rect.x = x
+        self.rect.y = y                 # move to location
+
+    def draw(self, window):
+        window.blit(self.image, self.rect)    # paint it
+
+
 class Animal(Enum):
     RABBIT = 0
     SHEEP = 1
@@ -54,17 +67,21 @@ def rand_animals():
 # end def
 
 
-def convert_animal_to_img(animal_number):
+def convert_animal_to_img(animal):
     img = None
-    if animal_number == Animal.RABBIT.value:
+    if animal.value == Animal.RABBIT.value:
         img = py.image.load("Images/bunny.png")
-    if animal_number == Animal.SHEEP.value:
+    if animal.value == Animal.SHEEP.value:
         img = py.image.load("Images/sheep.png")
-    if animal_number == Animal.PIG.value:
+    if animal.value == Animal.PIG.value:
         img = py.image.load("Images/pig.png")
-    if animal_number == Animal.COW.value:
+    if animal.value == Animal.COW.value:
         img = py.image.load("Images/cow.png")
-    if animal_number == Animal.HORSE.value:
+    if animal.value == Animal.HORSE.value:
+        img = py.image.load("Images/horse.png")
+    if animal.value == Predators.FOX.value:
+        img = py.image.load("Images/horse.png")
+    if animal.value == Predators.WOLF.value:
         img = py.image.load("Images/horse.png")
     return img
 # end def
