@@ -1,19 +1,20 @@
 import random
 from enum import Enum
+
 import pygame as py
 
 
 class Image:
 
     def __init__(self, x, y, image, width, height):
-        self.image  = py.transform.scale(image, (width, height))
-        self.rect   = image.get_rect()  # copy the image dimensions
-        #print("UUU")
+        self.image = py.transform.scale(image, (width, height))
+        self.rect = image.get_rect()  # copy the image dimensions
+        # print("UUU")
         self.rect.x = x
-        self.rect.y = y                 # move to location
+        self.rect.y = y  # move to location
 
     def draw(self, window):
-        window.blit(self.image, self.rect)    # paint it
+        window.blit(self.image, self.rect)  # paint it
 
 
 class Animal(Enum):
@@ -22,41 +23,74 @@ class Animal(Enum):
     PIG = 2
     COW = 3
     HORSE = 4
+
+
 # end enum
 
 
 class Defence(Enum):
     SMALLDOG = 6
     BIGDOG = 7
+
+
 # end enum
 
 
 class Predators(Enum):
     FOX = 10
     WOLF = 11
+
+
 # end enum
 
 
-bank = {Animal.RABBIT: 60, Animal.SHEEP: 24, Animal.PIG: 20, Animal.COW: 12, Animal.HORSE: 6,
-        Defence.SMALLDOG: 4, Defence.BIGDOG: 2}
+bank = {
+    Animal.RABBIT: 60,
+    Animal.SHEEP: 24,
+    Animal.PIG: 20,
+    Animal.COW: 12,
+    Animal.HORSE: 6,
+    Defence.SMALLDOG: 4,
+    Defence.BIGDOG: 2,
+}
 
-exchange_cost = {Animal.RABBIT: {Animal.SHEEP: 6, Animal.PIG: 12, Animal.COW: 36, Animal.HORSE: 72},
-                 Animal.SHEEP: {Animal.PIG: 2, Animal.COW: 6, Animal.HORSE: 12},
-                 Animal.PIG: {Animal.COW: 3, Animal.HORSE: 6},
-                 Animal.COW: {Animal.HORSE: 2},
-                 Animal.HORSE: {}}
+exchange_cost = {
+    Animal.RABBIT: {Animal.SHEEP: 6, Animal.PIG: 12, Animal.COW: 36, Animal.HORSE: 72},
+    Animal.SHEEP: {Animal.PIG: 2, Animal.COW: 6, Animal.HORSE: 12},
+    Animal.PIG: {Animal.COW: 3, Animal.HORSE: 6},
+    Animal.COW: {Animal.HORSE: 2},
+    Animal.HORSE: {},
+}
 
-animals1 = [Animal.RABBIT, Animal.RABBIT, Animal.RABBIT, Animal.RABBIT,
-            Animal.SHEEP, Animal.SHEEP, Animal.SHEEP,
-            Animal.PIG, Animal.PIG, Animal.PIG,
-            Animal.HORSE,
-            Predators.FOX]
+animals1 = [
+    Animal.RABBIT,
+    Animal.RABBIT,
+    Animal.RABBIT,
+    Animal.RABBIT,
+    Animal.SHEEP,
+    Animal.SHEEP,
+    Animal.SHEEP,
+    Animal.PIG,
+    Animal.PIG,
+    Animal.PIG,
+    Animal.HORSE,
+    Predators.FOX,
+]
 
-animals2 = [Animal.RABBIT, Animal.RABBIT, Animal.RABBIT, Animal.RABBIT,
-            Animal.SHEEP, Animal.SHEEP, Animal.SHEEP,
-            Animal.PIG, Animal.PIG, Animal.PIG,
-            Animal.COW,
-            Predators.WOLF]
+animals2 = [
+    Animal.RABBIT,
+    Animal.RABBIT,
+    Animal.RABBIT,
+    Animal.RABBIT,
+    Animal.SHEEP,
+    Animal.SHEEP,
+    Animal.SHEEP,
+    Animal.PIG,
+    Animal.PIG,
+    Animal.PIG,
+    Animal.COW,
+    Predators.WOLF,
+]
 
 
 def rand_animals():
@@ -64,6 +98,8 @@ def rand_animals():
     rand2 = random.randint(0, 11)
 
     return animals2[rand1], animals1[rand2]
+
+
 # end def
 
 
@@ -99,7 +135,10 @@ def convert_animal_to_img(animal):
     if animal.value == Predators.WOLF.value:
         img = py.image.load("Images/horse.png")
     return img
+
+
 # end def
+
 
 def convert_animal_to_dice_img(animal, k):
     img = None
@@ -122,7 +161,7 @@ def convert_animal_to_dice_img(animal, k):
         img = py.image.load("Images/cowdice2.png")
     if animal.value == Animal.HORSE.value and k == 2:
         img = py.image.load("Images/horsedice.png")
-    if animal.value == Predators.FOX.value and k ==2 :
+    if animal.value == Predators.FOX.value and k == 2:
         img = py.image.load("Images/Foxdice.png")
     if animal.value == Predators.WOLF.value and k == 1:
         img = py.image.load("Images/wolfdice.png")
