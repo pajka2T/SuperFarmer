@@ -43,7 +43,7 @@ class AppClass:
             for i in range(5):
                 if (
                     animalBoardCoordinates[player_turn][i][0][1] + CELL_SIZE / 2
-                    >= mpos_y
+                    >= mouse_y
                     >= animalBoardCoordinates[player_turn][i][0][1] - CELL_SIZE / 2
                 ):
                     a = i
@@ -51,10 +51,10 @@ class AppClass:
                 if (
                     math.sqrt(
                         math.pow(
-                            mpos_x - animalBoardCoordinates[player_turn][a][i][0], 2
+                            mouse_x - animalBoardCoordinates[player_turn][a][i][0], 2
                         )
                         + math.pow(
-                            mpos_y - animalBoardCoordinates[player_turn][a][i][1], 2
+                            mouse_y - animalBoardCoordinates[player_turn][a][i][1], 2
                         )
                     )
                     <= CELL_SIZE / 2
