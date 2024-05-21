@@ -290,5 +290,16 @@ def update_board(WINDOW, player, animals_before, animals_now, CELL_SIZE):
                              + CELL_SIZE / 2, animalBoardCoordinates[player_no][animal.value][
                                  len(animalBoardCoordinates[player_no][animal.value]) - 1][1]
                              + CELL_SIZE / 2))
+    py.display.flip()
 
 
+def mark_animals_for_exchange(WINDOW, player, animal, first_animal, last_animal, CELL_SIZE, color=BLUE3):
+    player_no = player.id
+    for i in range(first_animal, last_animal + 1):
+        draw_animal(WINDOW, color, animalBoardCoordinates[player_no][animal.value][i][0],
+                    animalBoardCoordinates[player_no][animal.value][i][1], CELL_SIZE, 10, animal, 255)
+    py.display.flip()
+
+
+def unmark_animals_for_exchange(WINDOW, player, animal, first_animal, no_exchanged_animals, CELL_SIZE):
+    mark_animals_for_exchange(WINDOW, player, animal, first_animal, first_animal + no_exchanged_animals - 1, CELL_SIZE, BLUE)

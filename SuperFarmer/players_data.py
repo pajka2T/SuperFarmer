@@ -107,14 +107,14 @@ class Player:
     def exchange_animals(self, animal_from, no_animals_to_exchange, animal_to):
         # Nie powinny występować takie problemy, ale ten warunek jest dla bezpieczeństwa przed wyrzuceniem błędu.
         if not isinstance(animal_from, Animal) or not isinstance(animal_to, Animal):
-            return False
+            return -1
 
         # Wymieniam zwierzęta na te rzadsze.
         if animal_to in exchange_cost[animal_from]:
             # Mam za mało zwierząt, żeby wymienić
             print("Exchange_cost: ", exchange_cost[animal_from][animal_to])
             if no_animals_to_exchange < exchange_cost[animal_from][animal_to]:
-                return False
+                return -2
 
             # Mam wystarczającą liczbę zwierząt na wymianę
             no_new_animals = min(no_animals_to_exchange // exchange_cost[animal_from][animal_to], bank[animal_to])
@@ -122,13 +122,19 @@ class Player:
             bank[animal_to] -= no_new_animals
             self.animals[animal_from] -= no_new_animals * exchange_cost[animal_from][animal_to]
             bank[animal_from] += no_new_animals * exchange_cost[animal_from][animal_to]
+            if no_new_animals <= 0:
+                return 2
+            return 1
         # Wymieniam zwierzęta na te częściej występujące
         else:
             no_new_animals = min(no_animals_to_exchange * exchange_cost[animal_to][animal_from], bank[animal_to])
             self.animals[animal_to] += no_new_animals
             bank[animal_to] -= no_new_animals
-            self.animals[animal_from] -= no_animals_to_exchange
-            bank[animal_from] += no_animals_to_exchange
+            self.animals[animal_from] -= no_new_animals // exchange_cost[animal_to][animal_from]
+            bank[animal_from] += no_new_animals // exchange_cost[animal_to][animal_from]
+            if no_new_animals <= 0:
+                return 2
+            return 1
         return True
     # end def
 # end class
