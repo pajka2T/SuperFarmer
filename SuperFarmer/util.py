@@ -69,6 +69,21 @@ def rand_animals():
 
 def convert_animal_to_img(animal):
     img = None
+    if not isinstance(animal, Animal) and not isinstance(animal, Predators):
+        print("Nie zwierzę ", animal)
+        # We have a pair of animals
+        if animal == Animal.RABBIT.value:
+            img = py.image.load("Images/bunnypair.png")
+        if animal == Animal.SHEEP.value:
+            img = py.image.load("Images/sheeppair.png")
+        if animal == Animal.PIG.value:
+            img = py.image.load("Images/pigpair.png")
+        if animal == Animal.COW.value:
+            img = py.image.load("Images/cowpair.png")
+        if animal == Animal.HORSE.value:
+            img = py.image.load("Images/horsepair.png")
+        return img
+    # We have one animal
     if animal.value == Animal.RABBIT.value:
         img = py.image.load("Images/bunny.png")
     if animal.value == Animal.SHEEP.value:

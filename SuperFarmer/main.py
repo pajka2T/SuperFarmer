@@ -53,6 +53,36 @@ class AppClass:
             return a, b
         # end def
 
+
+        def draw_alert(WINDOW, message):
+            alert_rect = (0.3*WINWIDTH, 0.3*WINHEIGHT, 500, 300)
+            py.draw.rect(WINDOW, WHITE, alert_rect)
+            #py.draw.rect(WINDOW, WHITE, alert_rect, 3)
+
+            # alert_text_surface_1 = font.render("How many animals would you like", True, BLACK)
+            # alert_text_surface_2 = font.render("                      to exchange?", True, BLACK)
+            # #alert_text_rect = alert_text_surface.get_rect(center=alert_rect.center)
+            # WINDOW.blit(alert_text_surface_1, (alert_rect[0]+20, alert_rect[1]+20))
+            # WINDOW.blit(alert_text_surface_2, (alert_rect[0]+20, alert_rect[1]+50))
+
+            win_text_surface = font.render(message, True, BLACK)
+            WINDOW.blit(win_text_surface, (alert_rect[0] + 20, alert_rect[1] + 20))
+
+            OK_BUTTON = (alert_rect[0]+alert_rect[2]/2-50, alert_rect[1]+alert_rect[3]-100, 100, 50)
+            py.draw.rect(WINDOW, GREEN, OK_BUTTON)
+            ok_text_surface = font.render("OK", True, WHITE)
+            WINDOW.blit(ok_text_surface, (OK_BUTTON[0]+27, OK_BUTTON[1]+10))
+            return OK_BUTTON
+
+        def check_win(player):
+            for animal, count in player.animals.items():
+                if count <= 0:
+                    print(animal, count)
+                    return False
+            print("WINWINWIN")
+            win[player.id] = True
+        # end def
+
         WINWIDTH = 1500
         WINHEIGHT = 800
         WINSIZE = (WINWIDTH, WINHEIGHT)
@@ -130,24 +160,6 @@ class AppClass:
         #          redfarmer_height / 3).draw(WINDOW)
 
         WINDOW.blit(cube_button_text_surface, (670, 610))
-        #print(util.Animal(0).value)
-        # for i in range(5):
-        #     board.drawcircles(WINDOW, BLU, BLU2, BLU3,
-        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][2],
-        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][3],
-        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][1],
-        #                       util.convert_animal_to_img(i),
-        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][4],
-        #                       CELL_SIZE)
-
-        #board.drawcircles(WINDOW, BLU, BLU2, BLU3, animalBoardCoordinates[0][0][n-1][2],
-        #                  animalBoardCoordinates[0][0][n-1][3], animalBoardCoordinates[0][0][n-1][1],
-        #                  util.convert_animal_to_img(0), animalBoardCoordinates[0][0][n-1][4], CELL_SIZE)
-
-
-        # for i in range(1, 5):
-        #     board.draw_animal()(WINDOW, BLU, animalBoardCoordinates[0][0][i][0],
-        #                       animalBoardCoordinates[0][0][i][1], CELL_SIZE / 2, 10, util.convert_animal_to_img(0))
 
         # Dogs bank
         small_dog = py.image.load('Images/smalldog.png')
@@ -174,302 +186,261 @@ class AppClass:
         start = [-1, -1]
         for_exchange = [[None, None, None] for _ in range(len(players))]
 
+        # For alert
+        show_alert = False
+        ok_button = None
+
+        # Win validator
+        win = [False for _ in range(len(players))]
+
+        # Input
+        # input_validator = pti.TextInputManager(validator=lambda input_value: isinstance(input_value, int))
+        # no_animals_input = pti.TextInputVisualizer(manager=input_validator, font_object=font)
+        # no_animals_input.cursor_width = 4
+        # no_animals_input.cursor_blink_interval = 400
+        # no_animals_input.antialias = False
+        # no_animals_input.font_color = GREEN
+        # WINDOW.blit(no_animals_input.surface, (0, 0))
+        # py.display.update()
+
         while AppClass.running:
+            while all(not val for val in win):
+                if is_mouse_over(CUBEBUTTON):
+                    py.draw.rect(WINDOW, DARKRED, CUBEBUTTON)
+                    WINDOW.blit(cube_button_text_surface, (670, 610))
+                else:
+                    py.draw.rect(WINDOW, RED, CUBEBUTTON)
+                    WINDOW.blit(cube_button_text_surface, (670, 610))
 
-            if is_mouse_over(CUBEBUTTON):
-                py.draw.rect(WINDOW, DARKRED, CUBEBUTTON)
-                WINDOW.blit(cube_button_text_surface, (670, 610))
-            else:
-                py.draw.rect(WINDOW, RED, CUBEBUTTON)
-                WINDOW.blit(cube_button_text_surface, (670, 610))
+                if is_mouse_over(SMALL_DOG_BUTTON):
+                    py.draw.rect(WINDOW, DARKGREY, RECT_BEHIND_SMALL_DOG_IMAGE)
+                    Image(SMALL_DOG_BUTTON[0], SMALL_DOG_BUTTON[1], small_dog, SMALL_DOG_BUTTON[2],
+                          SMALL_DOG_BUTTON[3]).draw(WINDOW)
+                else:
+                    py.draw.rect(WINDOW, BLACK, RECT_BEHIND_SMALL_DOG_IMAGE)
+                    Image(SMALL_DOG_BUTTON[0], SMALL_DOG_BUTTON[1], small_dog, SMALL_DOG_BUTTON[2],
+                          SMALL_DOG_BUTTON[3]).draw(WINDOW)
 
-            if is_mouse_over(SMALL_DOG_BUTTON):
-                py.draw.rect(WINDOW, DARKGREY, RECT_BEHIND_SMALL_DOG_IMAGE)
-                Image(SMALL_DOG_BUTTON[0], SMALL_DOG_BUTTON[1], small_dog, SMALL_DOG_BUTTON[2],
-                      SMALL_DOG_BUTTON[3]).draw(WINDOW)
-            else:
-                py.draw.rect(WINDOW, BLACK, RECT_BEHIND_SMALL_DOG_IMAGE)
-                Image(SMALL_DOG_BUTTON[0], SMALL_DOG_BUTTON[1], small_dog, SMALL_DOG_BUTTON[2],
-                      SMALL_DOG_BUTTON[3]).draw(WINDOW)
+                if is_mouse_over(BIG_DOG_BUTTON):
+                    py.draw.rect(WINDOW, DARKGREY, RECT_BEHIND_BIG_DOG_IMAGE)
+                    Image(BIG_DOG_BUTTON[0], BIG_DOG_BUTTON[1], big_dog,
+                          BIG_DOG_BUTTON[2], BIG_DOG_BUTTON[3]).draw(WINDOW)
+                else:
+                    py.draw.rect(WINDOW, BLACK, RECT_BEHIND_BIG_DOG_IMAGE)
+                    Image(BIG_DOG_BUTTON[0], BIG_DOG_BUTTON[1], big_dog, BIG_DOG_BUTTON[2],
+                          BIG_DOG_BUTTON[3]).draw(WINDOW)
 
-            if is_mouse_over(BIG_DOG_BUTTON):
-                py.draw.rect(WINDOW, DARKGREY, RECT_BEHIND_BIG_DOG_IMAGE)
-                Image(BIG_DOG_BUTTON[0], BIG_DOG_BUTTON[1], big_dog,
-                      BIG_DOG_BUTTON[2], BIG_DOG_BUTTON[3]).draw(WINDOW)
-            else:
-                py.draw.rect(WINDOW, BLACK, RECT_BEHIND_BIG_DOG_IMAGE)
-                Image(BIG_DOG_BUTTON[0], BIG_DOG_BUTTON[1], big_dog, BIG_DOG_BUTTON[2],
-                      BIG_DOG_BUTTON[3]).draw(WINDOW)
+                if show_alert:
+                    ok_button = draw_alert(WINDOW, "")
 
-            for event in py.event.get():
-                if event.type == QUIT:
-                    AppClass.running = False
-                if event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
+                for event in py.event.get():
+                    if event.type == QUIT:
                         AppClass.running = False
+                    if event.type == KEYDOWN:
+                        if event.key == K_ESCAPE:
+                            AppClass.running = False
 
-                if event.type == MOUSEBUTTONDOWN:
-                    # Get the position of the mouse
-                    mpos_x, mpos_y = event.pos
+                    if event.type == MOUSEBUTTONDOWN:
+                        if show_alert and ok_button is not None and is_mouse_over(ok_button):
+                            show_alert = False
+                            print(show_alert)
 
-                    # Before clicking cube button we can exchange animals
-                    # First value represents an animal to exchange, second is equivalent to the number of these animals
-                    # and third represents an animal which player wants to get after exchange.
+                        #no_animals_input.update(event)
+                        # Get the position of the mouse
+                        mpos_x, mpos_y = event.pos
 
-                    a, b = get_clicked_circle(mpos_x, mpos_y)
-                    if a != -1 and b != -1:
-                        if b >= players[player_turn].animals[util.Animal(a)] and for_exchange[player_turn][0] is None:
-                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                            alert = font.render("You don't have animals there!", True, WHITE)
-                            WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
-                            py.display.flip()
-                            time.delay(1000)
-                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                            break
-                        if (for_exchange[player_turn][0] is None and for_exchange[player_turn][1] is None
-                                and b < players[player_turn].animals[util.Animal(a)]):
-                            print("TU: ", for_exchange[player_turn])
-                            # First animal clicked
-                            for_exchange[player_turn][0] = util.Animal(a)
-                            start[player_turn] = b
-                            board.mark_animals_for_exchange(WINDOW, players[player_turn], util.Animal(a),
-                                                                         start[player_turn], start[player_turn], CELL_SIZE)
-                        elif (for_exchange[player_turn][1] is None and start[player_turn] != -1
-                              and b < players[player_turn].animals[util.Animal(a)]):
-                            print("TUU: ", for_exchange[player_turn])
-                            if util.Animal(a) == for_exchange[player_turn][0]:
-                                # Same animal clicked
-                                for_exchange[player_turn][1] = b - start[player_turn] + 1
-                                board.mark_animals_for_exchange(WINDOW, players[player_turn], util.Animal(a),
-                                                                             start[player_turn], b, CELL_SIZE)
-                            else:
-                                # Another animal clicked
-                                print("Another animal")
-                                board.unmark_animals_for_exchange(WINDOW, players[player_turn],
-                                                                  for_exchange[player_turn][0], start[player_turn],
-                                                                  start[player_turn], CELL_SIZE)
-                                for_exchange[player_turn][0] = util.Animal(a)
-                                start[player_turn] = b
-                                board.mark_animals_for_exchange(WINDOW, players[player_turn], util.Animal(a),
-                                                                             start[player_turn], start[player_turn], CELL_SIZE)
-                        else:
-                            print("TUUU: ", for_exchange[player_turn])
-                            if util.Animal(a) == for_exchange[player_turn][0]:
+                        # Before clicking cube button we can exchange animals
+                        # First value represents an animal to exchange, second is equivalent to the number of these animals
+                        # and third represents an animal which player wants to get after exchange.
+
+                        a, b = get_clicked_circle(mpos_x, mpos_y)
+                        if a != -1 and b != -1:
+                            if b > (players[player_turn].animals[util.Animal(a)]-1) // 2 and for_exchange[player_turn][0] is None:
                                 py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                                alert = font.render("You can't exchange animal for the same type", True, WHITE)
+                                alert = font.render("You don't have animals there!", True, WHITE)
                                 WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
                                 py.display.flip()
                                 time.delay(1000)
                                 py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                            else:
-                                for_exchange[player_turn][2] = util.Animal(a)
-                                print("Just before exchange: ", for_exchange[player_turn])
-                                animals_before = deepcopy(players[player_turn].animals)
-                                exchange_result = players[player_turn].exchange_animals(for_exchange[player_turn][0],
-                                                                                        for_exchange[player_turn][1],
-                                                                                        for_exchange[player_turn][2])
+                                break
 
-                                if exchange_result < 0:
+                            print(for_exchange[player_turn], start[player_turn], b, (players[player_turn].animals[util.Animal(a)]-1) // 2)
+                            if (for_exchange[player_turn][0] is None and for_exchange[player_turn][1] is None
+                                    and b <= (players[player_turn].animals[util.Animal(a)]-1) // 2):
+                                # First animal clicked
+                                for_exchange[player_turn][0] = util.Animal(a)
+                                start[player_turn] = b*2
+                                board.mark_animals_for_exchange(WINDOW, players[player_turn], util.Animal(a),
+                                                                             b, b, CELL_SIZE)
+                                print("TU: ", for_exchange[player_turn])
+                            elif for_exchange[player_turn][1] is None and start[player_turn] != -1:
+                                print("TUU: ", for_exchange[player_turn])
+                                if (util.Animal(a) == for_exchange[player_turn][0]
+                                        and b <= (players[player_turn].animals[util.Animal(a)]-1) // 2):
+                                    # Same animal clicked
+                                    for_exchange[player_turn][1] = (
+                                            min((b+1)*2, players[player_turn].animals[util.Animal(a)]) - start[player_turn])
+                                    board.mark_animals_for_exchange(WINDOW, players[player_turn], util.Animal(a),
+                                                                                 start[player_turn] // 2, b, CELL_SIZE)
+                                    print(for_exchange)
+                                elif (util.Animal(a) != for_exchange[player_turn][0]
+                                      and b <= (players[player_turn].animals[util.Animal(a)]-1)//2):
+                                    # Another animal clicked
+                                    print("Another animal")
+                                    board.unmark_animals_for_exchange(WINDOW, players[player_turn],
+                                                                      for_exchange[player_turn][0], start[player_turn] // 2,
+                                                                      start[player_turn] // 2, CELL_SIZE)
+                                    for_exchange[player_turn][0] = util.Animal(a)
+                                    start[player_turn] = b*2
+                                    board.mark_animals_for_exchange(WINDOW, players[player_turn], util.Animal(a),
+                                                                                 b, b, CELL_SIZE)
+                                    print(for_exchange)
+                                print("TUU: ", for_exchange[player_turn])
+                            elif for_exchange[player_turn][1] is not None and for_exchange[player_turn][2] is None:
+                                print("TUUU: ", for_exchange[player_turn])
+                                if util.Animal(a) == for_exchange[player_turn][0]:
                                     py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                                    alert = font.render("Too few animals to exchange", True, WHITE)
+                                    alert = font.render("You can't exchange animal for the same type", True, WHITE)
                                     WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
                                     py.display.flip()
                                     time.delay(1000)
-                                    board.unmark_animals_for_exchange(WINDOW, players[player_turn], for_exchange[player_turn][0],
-                                                                      start[player_turn], for_exchange[player_turn][1], CELL_SIZE)
                                     py.draw.rect(WINDOW, BLACK, INFO_RECT)
                                 else:
-                                    if exchange_result == 1:
+                                    for_exchange[player_turn][2] = util.Animal(a)
+                                    print("Just before exchange: ", for_exchange[player_turn])
+                                    animals_before = deepcopy(players[player_turn].animals)
+                                    exchange_result = players[player_turn].exchange_animals(for_exchange[player_turn][0],
+                                                                                            for_exchange[player_turn][1],
+                                                                                            for_exchange[player_turn][2])
+
+                                    if exchange_result < 0:
                                         py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                                        alert = font.render("You successfully exchanged your animals!", True, WHITE)
+                                        alert = font.render("Too few animals to exchange", True, WHITE)
                                         WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
                                         py.display.flip()
                                         time.delay(1000)
-                                        board.unmark_animals_for_exchange(WINDOW, players[player_turn],
-                                                                          for_exchange[player_turn][0], start[player_turn],
-                                                                          for_exchange[player_turn][1], CELL_SIZE)
+                                        board.unmark_animals_for_exchange(WINDOW, players[player_turn], for_exchange[player_turn][0],
+                                                                          start[player_turn] // 2,
+                                                        (start[player_turn] + for_exchange[player_turn][1] - 1) // 2, CELL_SIZE)
                                         py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                                        board.update_board(WINDOW, players[player_turn], animals_before,
-                                                           players[player_turn].animals, CELL_SIZE)
-                                        py.display.flip()
                                     else:
-                                        py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                                        alert = font.render("There are no animals left in the bank for exchange!", True, WHITE)
-                                        WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
-                                        py.display.flip()
-                                        time.delay(1000)
-                                        board.unmark_animals_for_exchange(WINDOW, players[player_turn],
-                                                                          for_exchange[player_turn][0],
-                                                                          start[player_turn],
-                                                                          for_exchange[player_turn][1], CELL_SIZE)
-                                        py.draw.rect(WINDOW, BLACK, INFO_RECT)
+                                        if exchange_result == 1:
+                                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
+                                            alert = font.render("You successfully exchanged your animals!", True, WHITE)
+                                            WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
+                                            py.display.flip()
+                                            time.delay(1000)
+                                            board.unmark_animals_for_exchange(WINDOW, players[player_turn],
+                                                                              for_exchange[player_turn][0], start[player_turn] // 2,
+                                                                              (start[player_turn] + for_exchange[player_turn][1] - 1) // 2, CELL_SIZE)
+                                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
+                                            board.update_board(WINDOW, players[player_turn], animals_before,
+                                                               players[player_turn].animals, CELL_SIZE)
+                                            print("AAAA")
+                                            py.display.flip()
+                                        else:
+                                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
+                                            alert = font.render("There are no animals left in the bank for exchange!", True, WHITE)
+                                            WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
+                                            py.display.flip()
+                                            time.delay(1000)
+                                            board.unmark_animals_for_exchange(WINDOW, players[player_turn],
+                                                                              for_exchange[player_turn][0],
+                                                                              start[player_turn] // 2,
+                                                                              (start[player_turn] +
+                                                                               for_exchange[player_turn][1] - 1) // 2, CELL_SIZE)
+                                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
 
-                                start[player_turn] = -1
-                                for_exchange[player_turn] = [None, None, None]
-
-
-                    if is_mouse_over(CUBEBUTTON):
-                        py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                        py.display.flip()
-                        message = ""
-                        # print("TUU")
-                        FIRSTCOLOR = RED
-                        SECONDCOLOR = GREEN
-                        drawn_animals = util.rand_animals()
-
-                        animals_before = deepcopy(players[player_turn].animals)
-
-                        res1, res2 = players[player_turn].add_animals(drawn_animals[0], drawn_animals[1])
-
-                        py.draw.rect(WINDOW, BLACK, CUBE_RESULT_MARKING_RECT)
-                        Image(CUBERESULT[0][0], CUBERESULT[0][1] - 10, convert_animal_to_img(drawn_animals[0]), 100,
-                              100).draw(WINDOW)
-                        Image(CUBERESULT[1][0], CUBERESULT[1][1] - 10, convert_animal_to_img(drawn_animals[1]), 100,
-                              100).draw(WINDOW)
-
-                        print(res1, res2)
-                        if res1 == util.Predators.FOX:
-                            message = f"Oh no, there was a fox attack on player {player_turn+1}!"
-                        elif res1 == util.Defence.SMALLDOG:
-                            message = f"The small dog saved player {player_turn+1} from fox attack!"
-                        if res2 == util.Predators.WOLF:
-                            message = f"Oh no, there was a wolf attack on player {player_turn+1}!"
-                        elif res2 == util.Defence.BIGDOG:
-                            message = f"The big dog saved player {player_turn+1} from wolf attack!"
-                        print("AAA")
-
-                        alert = font.render(message, True, WHITE)
-                        WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
-
-                        board.update_board(WINDOW, players[player_turn], animals_before, players[player_turn].animals, CELL_SIZE)
-
-
-                        i = 0
-                        # for key in players[0].animals:
-                        #     no_anim = players[0].animals[key]
-                        #     y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
-                        #     j = 0
-                        #     while j < 5:
-                        #         x = SCREENPADX + j * (CELLWIDTH + CELLMARGINX)
-                        #         if j < no_anim:
-                        #             image = py.image.load("Images/" + convert_animal_to_img(key)).convert_alpha()
-                        #             ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
-                        #         else:
-                        #             py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
-                        #         j += 1
-                        #     i += 1
-                        #py.display.flip()
-                        player_turn += 1
-                        player_turn %= 2
-
-                    if is_mouse_over(SMALL_DOG_BUTTON):
-                        # Small dog icon clicked
-                        animals_before = deepcopy(players[player_turn].animals)
-                        result = players[player_turn].buy_small_dog()
-                        if result == -1:
-                            message = "You don't have enough sheep to buy a small dog!"
-                        elif result == -2:
-                            message = "There are no small dogs left in the bank!"
+                                    start[player_turn] = -1
+                                    for_exchange[player_turn] = [None, None, None]
+                            check_win(players[player_turn])
                         else:
-                            message = "You successfully bought a small dog!"
-
-                        py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                        alert = font.render(message, True, WHITE)
-                        WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
-                        board.update_board(WINDOW, players[player_turn], animals_before, players[player_turn].animals, CELL_SIZE)
-                        py.display.flip()
-
-                    if is_mouse_over(BIG_DOG_BUTTON):
-                        # Big dog icon clicked
-                        animals_before = deepcopy(players[player_turn].animals)
-                        result = players[player_turn].buy_big_dog()
-                        if result == -1:
-                            message = "You don't have enough cows to buy a big dog!"
-                        elif result == -2:
-                            message = "There are no big dogs left in the bank!"
-                        else:
-                            message = "You successfully bought a big dog!"
-
-                        py.draw.rect(WINDOW, BLACK, INFO_RECT)
-                        alert = font.render(message, True, WHITE)
-                        WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
-                        board.update_board(WINDOW, players[player_turn], animals_before, players[player_turn].animals, CELL_SIZE)
-                        py.display.flip()
-
-                        # for key in players[1].animals:
-                        #     no_anim = players[1].animals[key]
-                        #     y = SCREENPADY + i * (CELLHEIGHT + CELLMARGINY)
-                        #     j = 0
-                        #     while j < 5:
-                        #         x = SCREENPADX + (j + 7) * (CELLWIDTH + CELLMARGINX)
-                        #         if j < no_anim:
-                        #             image = py.image.load('Images/' + convert_animal_to_img(key)).convert_alpha()
-                        #             ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
-                        #         else:
-                        #             py.draw.rect(WINDOW, WHITE, (x, y, CELLWIDTH, CELLHEIGHT))
-                        #         j += 1
-                        #     i += 1
-                        #py.display.flip()
+                            for_exchange[player_turn] = [None, None, None]
 
 
-                            # for i in range(5):
-                            #     x = SCREENPADX + i * (CELLWIDTH + CELLMARGINX)
-                            #     y = SCREENPADY
-                            #     image = py.image.load('rabbit.jpg').convert_alpha()
-                            #     ImageGrid(x, y, image, CELLWIDTH).draw(WINDOW)
+                        if is_mouse_over(CUBEBUTTON):
+                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
+                            py.display.flip()
+                            message = ""
+                            # print("TUU")
+                            FIRSTCOLOR = RED
+                            SECONDCOLOR = GREEN
+                            for_exchange = [[None, None, None] for _ in range(len(players))]
+                            drawn_animals = util.rand_animals()
 
-                            # CURRENTCOLOR = GREEN
+                            animals_before = deepcopy(players[player_turn].animals)
 
-                        # calculations for clicking cells
+                            res1, res2 = players[player_turn].add_animals(drawn_animals[0], drawn_animals[1])
 
-                    # if 0.7 * WINWIDTH <= mpos_x <= 0.7 * WINWIDTH + 50 and 0.1 * WINHEIGHT <= mpos_y <= 0.1 * WINHEIGHT + 50:
-                    #     # Small dog icon clicked
-                    #     print("Small dog")
-                    #     print(players[player_turn].animals)
-                    #     print(players[player_turn].buy_small_dog())
-                    #     print(players[player_turn].dogs)
-                    # if 0.85 * WINWIDTH <= mpos_x <= 0.85 * WINWIDTH + 50 and 0.1 * WINHEIGHT <= mpos_y <= 0.1 * WINHEIGHT + 50:
-                    #     # Big dog icon clicked
-                    #     print("Big dog")
-                    #     print(players[player_turn].animals)
-                    #     print(players[player_turn].buy_big_dog())
-                    #     print(players[player_turn].dogs)
+                            py.draw.rect(WINDOW, BLACK, CUBE_RESULT_MARKING_RECT)
+                            Image(CUBERESULT[0][0], CUBERESULT[0][1] - 10, convert_animal_to_img(drawn_animals[0]), 100,
+                                  100).draw(WINDOW)
+                            Image(CUBERESULT[1][0], CUBERESULT[1][1] - 10, convert_animal_to_img(drawn_animals[1]), 100,
+                                  100).draw(WINDOW)
 
-                    mpos_x -= SCREENPADX  # mouse position relative to the upper left cell
-                    mpos_y -= SCREENPADY  # ^ same
+                            print(res1, res2)
+                            if res1 == util.Predators.FOX:
+                                message = f"Oh no, there was a fox attack on player {player_turn+1}!"
+                            elif res1 == util.Defence.SMALLDOG:
+                                message = f"The small dog saved player {player_turn+1} from fox attack!"
+                            if res2 == util.Predators.WOLF:
+                                message = f"Oh no, there was a wolf attack on player {player_turn+1}!"
+                            elif res2 == util.Defence.BIGDOG:
+                                message = f"The big dog saved player {player_turn+1} from wolf attack!"
+                            print("AAA")
 
-                    # col = mpos_x // (CELLWIDTH + CELLMARGINX)  # which cell is the mouse clicking
-                    # row = mpos_y // (CELLHEIGHT + CELLMARGINY)  # ^ same
+                            alert = font.render(message, True, WHITE)
+                            WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
 
-                        # make sure the user clicked on the GRID area
-                        # if row >= 0 and col >= 0:
-                        #     try:
-                        #         # calculate the boundaries of the cell
-                        #         cell_x_min, cell_y_min = col * (CELLHEIGHT + CELLMARGINY), row * (
-                        #                     CELLWIDTH + CELLMARGINX)
-                        #         cell_x_max = cell_x_min + CELLWIDTH
-                        #         cell_y_max = cell_y_min + CELLHEIGHT
-                        #         # now we will see if the user clicked the cell or the margin
-                        #         if cell_x_min <= mpos_x <= cell_x_max and cell_y_min <= mpos_y <= cell_y_max:
-                        #             GRID[row][col][2] = CURRENTCOLOR if event.button == 1 else WHITE
-                        #         else:
-                        #             # the user has clicked the margin, so we do nothing
-                        #             pass
-                        #     except IndexError:  # clicked outside of the GRID
-                        #         pass  # we will do nothing
+                            board.update_board(WINDOW, players[player_turn], animals_before, players[player_turn].animals, CELL_SIZE)
 
-                # logic goes here
+                            check_win(players[player_turn])
 
-            #py.draw.rect(WINDOW, FIRSTCOLOR, CUBEBUTTON)
-            #py.draw.rect(WINDOW, SECONDCOLOR, SECONDPLAYERCUBEBUTTON)
+                            player_turn += 1
+                            player_turn %= 2
 
-                # for row in GRID:
-                #     for x, y, color in row:
-                #         py.draw.rect(WINDOW, color, (x, y, CELLWIDTH, CELLHEIGHT))
+                        if is_mouse_over(SMALL_DOG_BUTTON):
+                            # Small dog icon clicked
+                            animals_before = deepcopy(players[player_turn].animals)
+                            result = players[player_turn].buy_small_dog()
+                            if result == -1:
+                                message = "You don't have enough sheep to buy a small dog!"
+                            elif result == -2:
+                                message = "There are no small dogs left in the bank!"
+                            else:
+                                message = "You successfully bought a small dog!"
 
+                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
+                            alert = font.render(message, True, WHITE)
+                            WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
+                            board.update_board(WINDOW, players[player_turn], animals_before, players[player_turn].animals, CELL_SIZE)
+                            py.display.flip()
+
+                        if is_mouse_over(BIG_DOG_BUTTON):
+                            # Big dog icon clicked
+                            animals_before = deepcopy(players[player_turn].animals)
+                            result = players[player_turn].buy_big_dog()
+                            if result == -1:
+                                message = "You don't have enough cows to buy a big dog!"
+                            elif result == -2:
+                                message = "There are no big dogs left in the bank!"
+                            else:
+                                message = "You successfully bought a big dog!"
+
+                            py.draw.rect(WINDOW, BLACK, INFO_RECT)
+                            alert = font.render(message, True, WHITE)
+                            WINDOW.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
+                            board.update_board(WINDOW, players[player_turn], animals_before, players[player_turn].animals, CELL_SIZE)
+                            py.display.flip()
+
+
+
+                py.display.flip()
+            draw_alert(WINDOW, "Player " + str(win.index(True)) + " won! Congrats!")
             py.display.flip()
-
+            time.delay(100000)
             CLOCK.tick(60)
+
 
     py.quit()
 # end class

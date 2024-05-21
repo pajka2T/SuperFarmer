@@ -246,11 +246,26 @@ def update_board(WINDOW, player, animals_before, animals_now, CELL_SIZE):
         if no_animals_before < no_animals_now:
             print("Drawing new animals which values are ", animal.value)
             # There are places for animals
-            for i in range(no_animals_before, min(no_animals_now, 5-animal.value)):
-                draw_animal(WINDOW, BLUE, animalBoardCoordinates[player_no][animal.value][i][0],
-                            animalBoardCoordinates[player_no][animal.value][i][1], CELL_SIZE, 10, animal, 255)
+            # for i in range(no_animals_before, min(no_animals_now, 5-animal.value)):
+            #     draw_animal(WINDOW, BLUE, animalBoardCoordinates[player_no][animal.value][i][0],
+            #                 animalBoardCoordinates[player_no][animal.value][i][1], CELL_SIZE, 10, animal, 255)
+            # There are places for animals and we'll have new pair
+            if no_animals_before % 2 == 1 and no_animals_before < 10-animal.value*2:
+                draw_animal(WINDOW, BLUE, animalBoardCoordinates[player_no][animal.value][(no_animals_before-1)//2][0],
+                            animalBoardCoordinates[player_no][animal.value][(no_animals_before-1)//2][1],
+                            CELL_SIZE, 10, animal.value, 255)
+                no_animals_before += 1
+            for i in range(no_animals_before, min(no_animals_now-1, 10-animal.value*2), 2):
+                draw_animal(WINDOW, BLUE,
+                            animalBoardCoordinates[player_no][animal.value][i // 2][0],
+                            animalBoardCoordinates[player_no][animal.value][i // 2][1],
+                            CELL_SIZE, 10, animal.value, 255)
+            if no_animals_now % 2 == 1 and no_animals_now < 10-animal.value*2:
+                draw_animal(WINDOW, BLUE, animalBoardCoordinates[player_no][animal.value][no_animals_now // 2][0],
+                            animalBoardCoordinates[player_no][animal.value][no_animals_now // 2][1],
+                            CELL_SIZE, 10, animal, 255)
             # Drawing additional animals
-            if no_animals_now > 5:
+            if no_animals_now > 10-animal.value*2:
                 draw_additional_animals(WINDOW, BLUE, BLUE2, BLUE3,
                                         animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][2],
                                         animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][3],
@@ -259,30 +274,44 @@ def update_board(WINDOW, player, animals_before, animals_now, CELL_SIZE):
                                         animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][4],
                                         CELL_SIZE)
                 font2 = py.font.Font('Fonts/BRLNSDB.ttf', 32)
-                text = "+" + str(no_animals_now - (5-animal.value))
+                text = "+" + str(no_animals_now - (10-animal.value*2))
                 text_surface = font2.render(text, True, WHITE)
                 WINDOW.blit(text_surface,
                             (animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][0]
                              + CELL_SIZE/2, animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][1]
                              + CELL_SIZE/2))
+        # Removing some animals
         elif no_animals_now < no_animals_before:
             print("Removing animals which values are ", animal.value)
-            for i in range(no_animals_now, min(no_animals_before, 5-animal.value)):
-                draw_empty_circles(WINDOW, BLUE, BLACK, animalBoardCoordinates[player_no][animal.value][i][0],
-                            animalBoardCoordinates[player_no][animal.value][i][1], CELL_SIZE)
+            for i in range(max(no_animals_now+1, 0), min(no_animals_before+1, 10-animal.value*2), 2):
+                print(no_animals_now, no_animals_before, i, i//2)
+                draw_empty_circles(WINDOW, BLUE, BLACK, animalBoardCoordinates[player_no][animal.value][i // 2][0],
+                            animalBoardCoordinates[player_no][animal.value][i // 2][1], CELL_SIZE)
+            # Ifs for easier problem solving
             if no_animals_now == 0:
+                print("TU: 0")
                 draw_animal(WINDOW, BLUE, animalBoardCoordinates[player_no][animal.value][0][0],
                             animalBoardCoordinates[player_no][animal.value][0][1], CELL_SIZE, 10, animal, 128)
-            if no_animals_now <= 5-animal.value < no_animals_before:
+            elif no_animals_now == 1:
+                print("TU: 1")
+                draw_animal(WINDOW, BLUE, animalBoardCoordinates[player_no][animal.value][0][0],
+                            animalBoardCoordinates[player_no][animal.value][0][1], CELL_SIZE, 10, animal, 255)
+            elif no_animals_now == 2:
+                print("TU: 2")
+                draw_animal(WINDOW, BLUE, animalBoardCoordinates[player_no][animal.value][0][0],
+                            animalBoardCoordinates[player_no][animal.value][0][1], CELL_SIZE, 10, animal.value, 255)
+            if no_animals_now <= 10-animal.value*2 < no_animals_before:
+                print("AAAAAAAA")
                 # Removing additional animals
                 BLACK_MARKING_SQUARE = (animalBoardCoordinates[player_no][animal.value][5-animal.value-1][0] + CELL_SIZE / 2,
                                         animalBoardCoordinates[player_no][animal.value][5-animal.value-1][1] - CELL_SIZE / 2,
                                         CELL_SIZE + 10, CELL_SIZE)
                 py.draw.rect(WINDOW, BLACK, BLACK_MARKING_SQUARE)
-            elif no_animals_now > 5-animal.value:
+            elif no_animals_now > 10-animal.value*2:
+                print("TUUUUUUU")
                 # Changing value of additional animals printed number
                 font2 = py.font.Font('Fonts/BRLNSDB.ttf', 32)
-                text = "+" + str(no_animals_now - (5 - animal.value))
+                text = "+" + str(no_animals_now - (10 - animal.value*2))
                 text_surface = font2.render(text, True, WHITE)
                 WINDOW.blit(text_surface,
                             (animalBoardCoordinates[player_no][animal.value][
@@ -290,16 +319,27 @@ def update_board(WINDOW, player, animals_before, animals_now, CELL_SIZE):
                              + CELL_SIZE / 2, animalBoardCoordinates[player_no][animal.value][
                                  len(animalBoardCoordinates[player_no][animal.value]) - 1][1]
                              + CELL_SIZE / 2))
+    print(animals_now)
     py.display.flip()
 
 
 def mark_animals_for_exchange(WINDOW, player, animal, first_animal, last_animal, CELL_SIZE, color=BLUE3):
     player_no = player.id
-    for i in range(first_animal, last_animal + 1):
-        draw_animal(WINDOW, color, animalBoardCoordinates[player_no][animal.value][i][0],
-                    animalBoardCoordinates[player_no][animal.value][i][1], CELL_SIZE, 10, animal, 255)
+    print(animal, player.animals)
+    for i in range(min(first_animal, last_animal), max(first_animal + 1, last_animal + 1)):
+        print(player_no, animal, i)
+        animal_to_draw = None
+        if i*2+1 == player.animals[animal]:
+            animal_to_draw = animal
+        else:
+            animal_to_draw = animal.value
+        draw_animal(WINDOW, color,
+                    animalBoardCoordinates[player_no][animal.value][i][0],
+                    animalBoardCoordinates[player_no][animal.value][i][1],
+                    CELL_SIZE, 10, animal_to_draw, 255)
     py.display.flip()
 
 
 def unmark_animals_for_exchange(WINDOW, player, animal, first_animal, no_exchanged_animals, CELL_SIZE):
-    mark_animals_for_exchange(WINDOW, player, animal, first_animal, first_animal + no_exchanged_animals - 1, CELL_SIZE, BLUE)
+    print("ALO")
+    mark_animals_for_exchange(WINDOW, player, animal, first_animal, no_exchanged_animals, CELL_SIZE, BLUE)
