@@ -5,11 +5,13 @@ from pygame.locals import *
 from pygame import time
 
 import board
+import players_data
 from board import animalBoardCoordinates
 
 from players_data import create_users
 import util
 from util import convert_animal_to_img
+from util import convert_animal_to_dice_img
 from util import Image
 
 from copy import deepcopy
@@ -95,19 +97,30 @@ class AppClass:
         BLACK = (0, 0, 0)
         RED = (255, 0, 0)
         DARKRED = (145, 0, 0)
-        DARKGREY = (59, 59, 59)
-        GREEN = (0, 255, 0)
         BLU = (52, 229, 235)
         BLU2 = (93, 190, 194)
         BLU3 = (38, 125, 128)
+        #DARKBLUE = (145, 145, 0)
+        DARKGREY = (59, 59, 59)
+        GREEN = (0, 255, 0)
+        COLORS = [[] for _ in range(2)]
+        COLORS[0].append(RED)
+        COLORS[0].append(DARKRED)
+        COLORS[1].append(BLU2)
+        COLORS[1].append(BLU3)
+
+        redarrow = py.image.load('Images/down-arrow.png')
+        bluearrow = py.image.load('Images/arrow-left.png')
+        bluearrow = py.transform.rotate(bluearrow, 90)
+
 
         DONE = False  # is our program finished running?
 
         # information about the two buttons (red and green)
         SECONDPLAYERCUBEBUTTON = (450, 400, 200, 50)
-        CUBEBUTTON = (650, 600, 200, 50)
-        CUBERESULT = [(650, 500), (750, 500)]
-        CUBE_RESULT_MARKING_RECT = (650, 490, 200, 100)
+        CUBEBUTTON = (650, 480, 200, 50)
+        CUBERESULT = [(650, 380), (750, 380)]
+        CUBE_RESULT_MARKING_RECT = (650, 370, 200, 100)
 
         INFO_RECT = (0.2*WINWIDTH, 0.05*WINHEIGHT, 650, 50)
 
@@ -142,24 +155,43 @@ class AppClass:
         redfarmer = py.image.load('Images/redfarmer.png').convert_alpha()
         redfarmer_width, redfarmer_height = redfarmer.get_size()
 
-        # Animacja farmera
-        for i in range(10):
-            Image(WINWIDTH - bluefarmer_width / 4 - i * 5, WINHEIGHT - bluefarmer_height / 3 - i * 5, bluefarmer,
-                  bluefarmer_width / 3 + i * 10, bluefarmer_height / 3 + i * 10).draw(WINDOW)
-            py.display.update()
-            CLOCK.tick(40)
-        for i in range(10, -1, -1):
-            py.draw.rect(WINDOW, BLACK, (WINWIDTH - bluefarmer_width / 4-i*5, WINHEIGHT - bluefarmer_height / 3-i*5,
-                      bluefarmer_width / 3+i*10, bluefarmer_height / 3+i*10))
-            Image(WINWIDTH - bluefarmer_width / 4 - i * 5, WINHEIGHT - bluefarmer_height / 3 - i * 5, bluefarmer,
-                  bluefarmer_width / 3 + i * 10, bluefarmer_height / 3 + i * 10).draw(WINDOW)
-            py.display.update()
-            CLOCK.tick(40)
+        # # Animacja farmera
+        # for i in range(10):
+        #     Image(WINWIDTH - bluefarmer_width / 4 - i * 5, WINHEIGHT - bluefarmer_height / 3 - i * 5, bluefarmer,
+        #           bluefarmer_width / 3 + i * 10, bluefarmer_height / 3 + i * 10).draw(WINDOW)
+        #     py.display.update()
+        #     CLOCK.tick(40)
+        # for i in range(10, -1, -1):
+        #     py.draw.rect(WINDOW, BLACK, (WINWIDTH - bluefarmer_width / 4-i*5, WINHEIGHT - bluefarmer_height / 3-i*5,
+        #               bluefarmer_width / 3+i*10, bluefarmer_height / 3+i*10))
+        #     Image(WINWIDTH - bluefarmer_width / 4 - i * 5, WINHEIGHT - bluefarmer_height / 3 - i * 5, bluefarmer,
+        #           bluefarmer_width / 3 + i * 10, bluefarmer_height / 3 + i * 10).draw(WINDOW)
+        #     py.display.update()
+        #     CLOCK.tick(40)
 
         #ImageGrid(-redfarmer_width / 10, WINHEIGHT - redfarmer_height / 3, redfarmer, redfarmer_width / 3,
         #          redfarmer_height / 3).draw(WINDOW)
 
-        WINDOW.blit(cube_button_text_surface, (670, 610))
+        #WINDOW.blit(cube_button_text_surface, (CUBEBUTTON[0], CUBEBUTTON[1]))
+        #WINDOW.blit(cube_button_text_surface, (CUBEBUTTON[0]+20, CUBEBUTTON[1]+10))
+        #print(util.Animal(0).value)
+        # for i in range(5):
+        #     board.drawcircles(WINDOW, BLU, BLU2, BLU3,
+        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][2],
+        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][3],
+        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][1],
+        #                       util.convert_animal_to_img(i),
+        #                       animalBoardCoordinates[0][i][len(animalBoardCoordinates[0][i]) - 1][4],
+        #                       CELL_SIZE)
+
+        #board.drawcircles(WINDOW, BLU, BLU2, BLU3, animalBoardCoordinates[0][0][n-1][2],
+        #                  animalBoardCoordinates[0][0][n-1][3], animalBoardCoordinates[0][0][n-1][1],
+        #                  util.convert_animal_to_img(0), animalBoardCoordinates[0][0][n-1][4], CELL_SIZE)
+
+
+        # for i in range(1, 5):
+        #     board.draw_animal()(WINDOW, BLU, animalBoardCoordinates[0][0][i][0],
+        #                       animalBoardCoordinates[0][0][i][1], CELL_SIZE / 2, 10, util.convert_animal_to_img(0))
 
         # Dogs bank
         small_dog = py.image.load('Images/smalldog.png')
@@ -204,13 +236,19 @@ class AppClass:
         # py.display.update()
 
         while AppClass.running:
+            for event in py.event.get():
+                if event.type == QUIT:
+                    AppClass.running = False
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        AppClass.running = False
             while all(not val for val in win):
                 if is_mouse_over(CUBEBUTTON):
-                    py.draw.rect(WINDOW, DARKRED, CUBEBUTTON)
-                    WINDOW.blit(cube_button_text_surface, (670, 610))
+                    py.draw.rect(WINDOW, COLORS[player_turn][1], CUBEBUTTON)
+                    WINDOW.blit(cube_button_text_surface, (CUBEBUTTON[0]+20, CUBEBUTTON[1]+10))
                 else:
-                    py.draw.rect(WINDOW, RED, CUBEBUTTON)
-                    WINDOW.blit(cube_button_text_surface, (670, 610))
+                    py.draw.rect(WINDOW, COLORS[player_turn][0], CUBEBUTTON)
+                    WINDOW.blit(cube_button_text_surface, (CUBEBUTTON[0]+20, CUBEBUTTON[1]+10))
 
                 if is_mouse_over(SMALL_DOG_BUTTON):
                     py.draw.rect(WINDOW, DARKGREY, RECT_BEHIND_SMALL_DOG_IMAGE)
@@ -232,6 +270,17 @@ class AppClass:
 
                 if show_alert:
                     ok_button = draw_alert(WINDOW, "")
+
+                if player_turn == 0:
+                    py.draw.rect(WINDOW, BLACK, (1400, 370, 70, 70))
+                    Image(30, 370, redarrow, 70, 70).draw(WINDOW)
+                elif player_turn == 1:
+                    py.draw.rect(WINDOW, BLACK, (30, 370, 70, 70))
+                    Image(1400, 370, bluearrow, 70, 70).draw(WINDOW)
+
+                board.draw_dogs(WINDOW, redfarmer_width/3+40, 680, 1500 - bluefarmer_width/3, 680, small_dog, big_dog,
+                                players[0].dogs[util.Defence.SMALLDOG], players[0].dogs[util.Defence.BIGDOG],
+                                players[1].dogs[util.Defence.SMALLDOG], players[1].dogs[util.Defence.BIGDOG])
 
                 for event in py.event.get():
                     if event.type == QUIT:
@@ -373,10 +422,19 @@ class AppClass:
                             res1, res2 = players[player_turn].add_animals(drawn_animals[0], drawn_animals[1])
 
                             py.draw.rect(WINDOW, BLACK, CUBE_RESULT_MARKING_RECT)
-                            Image(CUBERESULT[0][0], CUBERESULT[0][1] - 10, convert_animal_to_img(drawn_animals[0]), 100,
-                                  100).draw(WINDOW)
-                            Image(CUBERESULT[1][0], CUBERESULT[1][1] - 10, convert_animal_to_img(drawn_animals[1]), 100,
-                                  100).draw(WINDOW)
+                            #Image(CUBERESULT[0][0], CUBERESULT[0][1] - 10, convert_animal_to_img(drawn_animals[0]), 100,
+                            #      100).draw(WINDOW)
+                            #Image(CUBERESULT[1][0], CUBERESULT[1][1] - 10, convert_animal_to_img(drawn_animals[1]), 100,
+                            #      100).draw(WINDOW)
+                            #py.draw.rect(WINDOW, BLACK, CUBE_RESULT_MARKING_RECT)
+                            # Image(CUBERESULT[0][0], CUBERESULT[0][1] - 10, convert_animal_to_dice_img(drawn_animals[0], 1), 100,
+                            #       100).draw(WINDOW)
+                            # Image(CUBERESULT[1][0], CUBERESULT[1][1] - 10, convert_animal_to_dice_img(drawn_animals[1], 2), 100,
+                            #       100).draw(WINDOW)
+                            board.rotate_animation(WINDOW, convert_animal_to_dice_img(drawn_animals[0], 1), convert_animal_to_dice_img(drawn_animals[1], 2), BLACK, CLOCK,
+                                               CUBERESULT[0][0] + 40, CUBERESULT[0][1] + 40, 100)
+                            #board.rotate_animation(WINDOW, convert_animal_to_dice_img(drawn_animals[1], 2), BLACK, CLOCK,
+                            #                       CUBERESULT[0][0] + 140, CUBERESULT[0][1] + 40)
 
                             print(res1, res2)
                             if res1 == util.Predators.FOX:
@@ -387,6 +445,8 @@ class AppClass:
                                 message = f"Oh no, there was a wolf attack on player {player_turn+1}!"
                             elif res2 == util.Defence.BIGDOG:
                                 message = f"The big dog saved player {player_turn+1} from wolf attack!"
+                            if res1 == util.Predators.FOX and res2 == util.Predators.WOLF:
+                                message = f"Oh no, there was a fox-and-wolf attack on player {player_turn+1}!"
                             print("AAA")
 
                             alert = font.render(message, True, WHITE)

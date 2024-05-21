@@ -1,9 +1,11 @@
+import pygame
 import pygame as py
 import math
 
 from util import Image
 from util import convert_animal_to_img
 from util import Animal
+import matplotlib.pyplot as plt
 
 BLUE = (52, 229, 235)
 BLUE2 = (93, 190, 194)
@@ -11,6 +13,30 @@ BLUE3 = (38, 125, 128)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
+
+def rotate_animation(window, image, image2, color, clock, x, y, diff):
+    width = image.get_width()/9
+    height = image.get_height()/9
+    for i in range(80, -1, -1):
+        rotated_image = py.transform.rotate(image, 9*(40-i))
+        rotated_image2 = py.transform.rotate(image2, 9*(40-i))
+        if i > 20:
+            clock.tick(i*15)
+        elif i > 10:
+            clock.tick(i*12)
+        elif i > 1:
+            clock.tick(i*10)
+        else:
+            clock.tick(15)
+
+        # a = abs(width*math.sin(4.5*(10-i)))
+        # b = abs(width*math.cos(4.5*(10-i)))
+        # x2 = x-(a+b-width)/2
+        # y2 = y-(a+b-height)/2
+        py.draw.rect(window, color, (x-width/2, y-height/2, width*2+2, height+1), 0)
+        Image(x - rotated_image.get_width()/18, y - rotated_image.get_height()/18, rotated_image, rotated_image.get_width()/9, rotated_image.get_height()/9).draw(window)
+        Image(x - rotated_image2.get_width()/18 + diff, y -rotated_image2.get_height()/18, rotated_image2, rotated_image2.get_width()/9, rotated_image2.get_height()/9).draw(window)
+        py.display.update()
 
 def draw_additional_animals(window, color1, color2, color3, x, x2, y, animal, size, CELL_SIZE):
     py.draw.circle(window, color3, (x + CELL_SIZE / 1.8, y + CELL_SIZE / 1.8), CELL_SIZE / 2.4)
@@ -34,6 +60,28 @@ def draw_animal(window, color1, center_x, center_y, CELL_SIZE, size, animal, alp
     img.set_alpha(alpha)
     Image(center_x - CELL_SIZE / 2 + CELL_SIZE / size, center_y - CELL_SIZE / 2 + CELL_SIZE / size,
           img, (1 - 2 / size) * CELL_SIZE, (1 - 2 / size) * CELL_SIZE).draw(window)
+
+def draw_dogs(window, x1, y1, x2, y2, smalldog, bigdog, sd1, bd1, sd2, bd2):
+    font = pygame.font.Font('Fonts/BRLNSDB.ttf', 50)
+    py.draw.rect(window, BLACK, (x1, y1, 100, 120))
+    py.draw.rect(window, BLACK, (x2, y2, 100, 120))
+    if sd1 > 0:
+        textsurface = font.render(f'{sd1}', True, WHITE)
+        window.blit(textsurface, (x1+10, y1+10))
+        Image(x1+35, y1+10, smalldog, 50, 50).draw(window)
+    if sd2 > 0:
+        textsurface = font.render(f'{sd2}', True, WHITE)
+        window.blit(textsurface, (x2+10, y2+10))
+        Image(x2+35, y2+10, smalldog, 50, 50).draw(window)
+    if bd1 > 0:
+        textsurface = font.render(f'{bd1}', True, WHITE)
+        window.blit(textsurface, (x1+10, y1+70))
+        Image(x1+35, y1+70, bigdog, 50, 50).draw(window)
+    if bd2 > 0:
+        textsurface = font.render(f'{bd2}', True, WHITE)
+        window.blit(textsurface, (x2+10, y2+70))
+        Image(x2+35, y2+70, bigdog, 50, 50).draw(window)
+
 
 
 players = 2
@@ -77,6 +125,19 @@ def create_board(WINDOW):
     #print(bluefarmer_width, bluefarmer_height)
     redfarmer = py.image.load('Images/redfarmer.png').convert_alpha()
     redfarmer_width, redfarmer_height = redfarmer.get_size()
+    tablica1 = py.image.load('Images/tablica1.png')
+    tablica2 = py.image.load('Images/tablica2.png')
+    naglowek = py.image.load('Images/Naglowek.png')
+
+    buda1 = py.image.load('Images/doghouse.png')
+    buda2 = py.image.load('Images/dog-house.png')
+
+    Image(redfarmer_width/3+150, 618, tablica1, 250, 172).draw(WINDOW)
+    Image(redfarmer_width/3+140+272, 618, tablica2, 272, 190).draw(WINDOW)
+    Image(redfarmer_width/3+270, 540, naglowek, 255, 108).draw(WINDOW)
+
+    Image(redfarmer_width/3-90, 680, buda1, 120, 120).draw(WINDOW)
+    Image(SCREENWIDTH - bluefarmer_width/3 - 120, 690, buda2, 120, 120).draw(WINDOW)
 
     Image(SCREENWIDTH - bluefarmer_width / 4, SCREENHEIGHT - bluefarmer_height / 3, bluefarmer, bluefarmer_width / 3, bluefarmer_height / 3).draw(WINDOW)
     Image(-redfarmer_width / 10, SCREENHEIGHT - redfarmer_height / 3, redfarmer, redfarmer_width / 3, redfarmer_height / 3).draw(WINDOW)
@@ -266,6 +327,8 @@ def update_board(WINDOW, player, animals_before, animals_now, CELL_SIZE):
                             CELL_SIZE, 10, animal, 255)
             # Drawing additional animals
             if no_animals_now > 10-animal.value*2:
+                py.draw.rect(WINDOW, BLACK, (animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][0],
+                                             animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][1], CELL_SIZE, CELL_SIZE))
                 draw_additional_animals(WINDOW, BLUE, BLUE2, BLUE3,
                                         animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][2],
                                         animalBoardCoordinates[player_no][animal.value][len(animalBoardCoordinates[player_no][animal.value]) - 1][3],
