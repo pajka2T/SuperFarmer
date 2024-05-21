@@ -112,11 +112,12 @@ class Player:
         # Wymieniam zwierzęta na te rzadsze.
         if animal_to in exchange_cost[animal_from]:
             # Mam za mało zwierząt, żeby wymienić
+            print("Exchange_cost: ", exchange_cost[animal_from][animal_to])
             if no_animals_to_exchange < exchange_cost[animal_from][animal_to]:
                 return False
 
             # Mam wystarczającą liczbę zwierząt na wymianę
-            no_new_animals = min(no_animals_to_exchange / exchange_cost[animal_from][animal_to], bank[animal_to])
+            no_new_animals = min(no_animals_to_exchange // exchange_cost[animal_from][animal_to], bank[animal_to])
             self.animals[animal_to] += no_new_animals
             bank[animal_to] -= no_new_animals
             self.animals[animal_from] -= no_new_animals * exchange_cost[animal_from][animal_to]
