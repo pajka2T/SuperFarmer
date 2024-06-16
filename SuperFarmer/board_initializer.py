@@ -11,7 +11,13 @@ class BoardInitializer:
         self.animal_board_coordinates = None
         self.cell_size = None
 
-    def create_board(self, window: Surface) -> (int, tuple[int, int, int, int], tuple[int, int, int, int], tuple[int, int, int, int], py.font.Font):
+    def create_board(self, window: Surface) -> (
+        int,
+        tuple[int, int, int, int],
+        tuple[int, int, int, int],
+        tuple[int, int, int, int],
+        py.font.Font,
+    ):
         blue = (52, 229, 235)
         white = (255, 255, 255)
         red = (255, 0, 0)
@@ -32,7 +38,12 @@ class BoardInitializer:
             SCREENWIDTH - BUNNY_MARGIN_SIDE - self.cell_size * 6 - BETWEEN_CELLS * 6
         )
 
-        SMALL_DOG_BUTTON = (0.7 * window.get_width(), 0.05 * window.get_height(), 80, 80)
+        SMALL_DOG_BUTTON = (
+            0.7 * window.get_width(),
+            0.05 * window.get_height(),
+            80,
+            80,
+        )
         BIG_DOG_BUTTON = (0.85 * window.get_width(), 0.05 * window.get_height(), 80, 80)
 
         bunny = convert_animal_to_img(Animal.RABBIT)
@@ -50,7 +61,6 @@ class BoardInitializer:
 
         buda1 = py.image.load("Images/doghouse.png")
         buda2 = py.image.load("Images/dog-house.png")
-
 
         Image(redfarmer_width / 3 + 150, 618, first_table, 250, 172).draw(window)
         Image(redfarmer_width / 3 + 140 + 272, 618, second_table, 272, 190).draw(window)
@@ -124,6 +134,7 @@ class BoardInitializer:
         py.display.flip()
 
         return self.cell_size, CUBE_BUTTON, SMALL_DOG_BUTTON, BIG_DOG_BUTTON, font
+
     # end def
 
     def __create_coordinates(
@@ -188,7 +199,9 @@ class BoardInitializer:
                             + self.cell_size * 2
                             + between_cells
                             + self.cell_size_and_space_between * circle_number,
-                            board_margin_top + self.cell_size * 3.5 + between_cells * 1.5,
+                            board_margin_top
+                            + self.cell_size * 3.5
+                            + between_cells * 1.5,
                         )
                     )
 
@@ -214,16 +227,19 @@ class BoardInitializer:
                         board_margin_top
                         + (self.cell_size + between_cells / 2) * animal_number,
                         bunny_margin_sides[player_number]
-                        + self.cell_size_and_space_between * (5 - (animal_number + 1) // 2)
+                        + self.cell_size_and_space_between
+                        * (5 - (animal_number + 1) // 2)
                         + (self.cell_size / 2) * (animal_number % 2),
                         bunny_margin_sides[player_number]
-                        + self.cell_size_and_space_between * (4 - (animal_number + 1) // 2)
+                        + self.cell_size_and_space_between
+                        * (4 - (animal_number + 1) // 2)
                         + (self.cell_size / 2) * (animal_number % 2),
                         2 / 3,
                     )
                 )
 
         self.animal_board_coordinates = animal_board_coordinates
+
     # end def
 
     def __draw_start_animals(
@@ -257,15 +273,16 @@ class BoardInitializer:
                             fields[field_number][1],
                             self.cell_size,
                         )
+
     # end def
 
     def __draw_dogs_shop(
-            self,
-            window: Surface,
-            small_dog_button: tuple[float, float, float, float],
-            big_dog_button: tuple[float, float, float, float],
-            white: tuple[int, int, int],
-            blue: tuple[int, int, int]
+        self,
+        window: Surface,
+        small_dog_button: tuple[float, float, float, float],
+        big_dog_button: tuple[float, float, float, float],
+        white: tuple[int, int, int],
+        blue: tuple[int, int, int],
     ) -> None:
         small_dog = py.image.load("Images/smalldog.png")
         Image(
@@ -328,4 +345,5 @@ class BoardInitializer:
             dog_info_3,
             (small_dog_button[0] + small_dog_button[2] + 10, small_dog_button[1] + 56),
         )
+
     # end def

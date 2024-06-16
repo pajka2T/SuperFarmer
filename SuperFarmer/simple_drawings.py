@@ -1,6 +1,7 @@
 import pygame as py
 from pygame import Surface
-from util import Image, Animal, convert_animal_to_img
+
+from util import Animal, Image, convert_animal_to_img
 
 
 def draw_animal(

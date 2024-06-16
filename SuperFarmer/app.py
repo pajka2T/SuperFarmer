@@ -1,15 +1,16 @@
+from copy import deepcopy
+
 import pygame as py
 from pygame.locals import *
 
+import util
+from board_initializer import BoardInitializer
 from exchange_mechanism import ExchangeMechanism
+from interaction_actions import (check_win, draw_alert, get_clicked_circle,
+                                 is_mouse_over)
+from on_change_drawings import draw_dogs, rotate_animation, update_board
 from players_data import create_users
 from util import Image, convert_animal_to_dice_img
-from board_initializer import BoardInitializer
-from interaction_actions import is_mouse_over, get_clicked_circle, check_win, draw_alert
-from on_change_drawings import rotate_animation, draw_dogs, update_board
-
-from copy import deepcopy
-import util
 
 
 class App:
@@ -75,7 +76,9 @@ class App:
         print("TUTAJ")
         CLOCK = py.time.Clock()
         board = BoardInitializer()
-        CELL_SIZE, CUBE_BUTTON, SMALL_DOG_BUTTON, BIG_DOG_BUTTON, font = board.create_board(WINDOW)
+        CELL_SIZE, CUBE_BUTTON, SMALL_DOG_BUTTON, BIG_DOG_BUTTON, font = (
+            board.create_board(WINDOW)
+        )
         py.display.flip()
 
         bluefarmer = py.image.load("Images/bluefarmer.png").convert_alpha()
@@ -124,8 +127,6 @@ class App:
         #                       animalBoardCoordinates[0][0][i][1], CELL_SIZE / 2, 10, util.convert_animal_to_img(0))
 
         # Dogs bank
-
-
 
         # For exchange
         start = [-1, -1]
@@ -259,10 +260,17 @@ class App:
                         # First value represents an animal to exchange, second is equivalent to the number of these animals
                         # and third represents an animal which player wants to get after exchange.
 
-                        a, b = get_clicked_circle(mpos_x, mpos_y, player_turn, board.animal_board_coordinates, CELL_SIZE)
+                        a, b = get_clicked_circle(
+                            mpos_x,
+                            mpos_y,
+                            player_turn,
+                            board.animal_board_coordinates,
+                            CELL_SIZE,
+                        )
                         if a != -1 and b != -1:
-                            exc_mech.exchange(a, b, self.players, player_turn,
-                                              win, INFO_RECT, font)
+                            exc_mech.exchange(
+                                a, b, self.players, player_turn, win, INFO_RECT, font
+                            )
                         else:
                             exc_mech.reset_for_exchange(self.players[player_turn])
 
@@ -389,7 +397,9 @@ class App:
                             py.display.flip()
 
                 py.display.flip()
-            draw_alert(WINDOW, "Player " + str(win.index(True)) + " won! Congrats!", font)
+            draw_alert(
+                WINDOW, "Player " + str(win.index(True)) + " won! Congrats!", font
+            )
             py.display.flip()
             py.time.delay(100000)
             CLOCK.tick(60)

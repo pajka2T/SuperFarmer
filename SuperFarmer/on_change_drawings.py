@@ -1,12 +1,13 @@
+from typing import Dict
+
 import pygame as py
 from pygame import Surface
 from pygame.time import Clock
 
 from players_data import Player
+from simple_drawings import (draw_additional_animals, draw_animal,
+                             draw_empty_circles)
 from util import Animal, Image
-from simple_drawings import draw_animal, draw_empty_circles, draw_additional_animals
-
-from typing import Dict
 
 BLUE = (52, 229, 235)
 BLUE2 = (93, 190, 194)
@@ -150,12 +151,8 @@ def update_board(
                 draw_animal(
                     window,
                     BLUE,
-                    animal_board_coordinates[player_no][animal][
-                        no_animals_now // 2
-                    ][0],
-                    animal_board_coordinates[player_no][animal][
-                        no_animals_now // 2
-                    ][1],
+                    animal_board_coordinates[player_no][animal][no_animals_now // 2][0],
+                    animal_board_coordinates[player_no][animal][no_animals_now // 2][1],
                     cell_size,
                     10,
                     animal,
@@ -271,13 +268,9 @@ def update_board(
                 print("AAAAAAAA")
                 # Removing additional animals
                 BLACK_MARKING_SQUARE = (
-                    animal_board_coordinates[player_no][animal][
-                        5 - animal.value - 1
-                    ][0]
+                    animal_board_coordinates[player_no][animal][5 - animal.value - 1][0]
                     + cell_size / 2,
-                    animal_board_coordinates[player_no][animal][
-                        5 - animal.value - 1
-                    ][1]
+                    animal_board_coordinates[player_no][animal][5 - animal.value - 1][1]
                     - cell_size / 2,
                     cell_size + 10,
                     cell_size,
@@ -350,5 +343,12 @@ def unmark_animals_for_exchange(
     cell_size: float,
 ):
     mark_animals_for_exchange(
-        window, player, animal, first_animal, no_exchanged_animals, animal_board_coordinates, cell_size, BLUE
+        window,
+        player,
+        animal,
+        first_animal,
+        no_exchanged_animals,
+        animal_board_coordinates,
+        cell_size,
+        BLUE,
     )
