@@ -2,7 +2,7 @@ from util import Animal, Defence, Predators, bank, exchange_cost
 
 
 class Player:
-    def __init__(self, id):
+    def __init__(self, id: int) -> None:
         self.id = id
         self.animals = {
             Animal.RABBIT: 0,
@@ -13,7 +13,7 @@ class Player:
         }
         self.dogs = {Defence.SMALLDOG: 0, Defence.BIGDOG: 0}
 
-    def add_animals(self, animal1, animal2):
+    def add_animals(self, animal1: Animal, animal2: Animal) -> tuple[str, str]:
         print(animal1, animal2)
 
         # Oba zwierzęta są hodowlane i są takie same
@@ -87,7 +87,7 @@ class Player:
 
     # end def
 
-    def buy_small_dog(self):
+    def buy_small_dog(self) -> int:
         if self.animals[Animal.SHEEP] < 1:
             return -1
         if bank[Defence.SMALLDOG] <= 0:
@@ -99,7 +99,7 @@ class Player:
 
     # end def
 
-    def buy_big_dog(self):
+    def buy_big_dog(self) -> int:
         if self.animals[Animal.COW] < 1:
             return -1
         if bank[Defence.BIGDOG] <= 0:
@@ -111,7 +111,9 @@ class Player:
 
     # end def
 
-    def exchange_animals(self, animal_from, no_animals_to_exchange, animal_to):
+    def exchange_animals(
+        self, animal_from: Animal, no_animals_to_exchange: int, animal_to: Animal
+    ) -> int:
         # Nie powinny występować takie problemy, ale ten warunek jest dla bezpieczeństwa przed wyrzuceniem błędu.
         if not isinstance(animal_from, Animal) or not isinstance(animal_to, Animal):
             return -1
@@ -159,7 +161,7 @@ class Player:
 # end class
 
 
-def create_users(n):
+def create_users(n: int) -> list[Player]:
     players = []
     for i in range(0, n):
         new_player = Player(i)

@@ -2,18 +2,21 @@ import random
 from enum import Enum
 
 import pygame as py
+from pygame import Surface
 
 
 class Image:
 
-    def __init__(self, x, y, image, width, height):
+    def __init__(
+        self, x: float, y: float, image: Surface, width: float, height: float
+    ) -> None:
         self.image = py.transform.scale(image, (width, height))
         self.rect = image.get_rect()  # copy the image dimensions
         # print("UUU")
         self.rect.x = x
         self.rect.y = y  # move to location
 
-    def draw(self, window):
+    def draw(self, window: Surface) -> None:
         window.blit(self.image, self.rect)  # paint it
 
 
@@ -93,7 +96,7 @@ animals2 = [
 ]
 
 
-def rand_animals():
+def rand_animals() -> tuple[Animal, Animal]:
     rand1 = random.randint(0, 11)
     rand2 = random.randint(0, 11)
 
@@ -103,7 +106,7 @@ def rand_animals():
 # end def
 
 
-def convert_animal_to_img(animal):
+def convert_animal_to_img(animal: Animal) -> Surface:
     img = None
     if not isinstance(animal, Animal) and not isinstance(animal, Predators):
         print("Nie zwierzę ", animal)
@@ -140,7 +143,7 @@ def convert_animal_to_img(animal):
 # end def
 
 
-def convert_animal_to_dice_img(animal, k):
+def convert_animal_to_dice_img(animal: Animal, k: int) -> Surface:
     img = None
     if animal.value == Animal.RABBIT.value:
         if k == 1:
