@@ -1,7 +1,5 @@
 import math
 
-import pygame.font
-
 from simple_drawings import *
 
 
@@ -10,6 +8,10 @@ class BoardInitializer:
         self.no_players = no_players
         self.animal_board_coordinates = None
         self.cell_size = None
+        self.cube_button = None
+        self.small_dog_button = None
+        self.big_dog_button = None
+        self.font = None
 
     def create_board(self, window: Surface) -> (
         int,
@@ -21,7 +23,7 @@ class BoardInitializer:
         blue = (52, 229, 235)
         white = (255, 255, 255)
         red = (255, 0, 0)
-        font = py.font.Font("Fonts/BRLNSDB.ttf", 28)
+        self.font = py.font.Font("Fonts/BRLNSDB.ttf", 28)
         logo2 = py.image.load("Images/Logo2.png").convert_alpha()
 
         screeninfo = py.display.Info()
@@ -38,13 +40,18 @@ class BoardInitializer:
             SCREENWIDTH - BUNNY_MARGIN_SIDE - self.cell_size * 6 - BETWEEN_CELLS * 6
         )
 
-        SMALL_DOG_BUTTON = (
+        self.small_dog_button = (
             0.7 * window.get_width(),
             0.05 * window.get_height(),
             80,
             80,
         )
-        BIG_DOG_BUTTON = (0.85 * window.get_width(), 0.05 * window.get_height(), 80, 80)
+        self.big_dog_button = (
+            0.85 * window.get_width(),
+            0.05 * window.get_height(),
+            80,
+            80,
+        )
 
         bunny = convert_animal_to_img(Animal.RABBIT)
         py.display.set_icon(bunny)
@@ -59,15 +66,15 @@ class BoardInitializer:
         second_table = py.image.load("Images/tablica2.png")
         naglowek = py.image.load("Images/Naglowek.png")
 
-        buda1 = py.image.load("Images/doghouse.png")
-        buda2 = py.image.load("Images/dog-house.png")
+        dob_house1 = py.image.load("Images/doghouse.png")
+        dob_house2 = py.image.load("Images/dog-house.png")
 
         Image(redfarmer_width / 3 + 150, 618, first_table, 250, 172).draw(window)
         Image(redfarmer_width / 3 + 140 + 272, 618, second_table, 272, 190).draw(window)
         Image(redfarmer_width / 3 + 270, 540, naglowek, 255, 108).draw(window)
 
-        Image(redfarmer_width / 3 - 90, 680, buda1, 120, 120).draw(window)
-        Image(SCREENWIDTH - bluefarmer_width / 3 - 120, 690, buda2, 120, 120).draw(
+        Image(redfarmer_width / 3 - 90, 680, dob_house1, 120, 120).draw(window)
+        Image(SCREENWIDTH - bluefarmer_width / 3 - 140, 680, dob_house2, 120, 120).draw(
             window
         )
 
@@ -86,7 +93,9 @@ class BoardInitializer:
             redfarmer_height / 3,
         ).draw(window)
 
-        self.__draw_dogs_shop(window, SMALL_DOG_BUTTON, BIG_DOG_BUTTON, white, blue)
+        self.__draw_dogs_shop(
+            window, self.small_dog_button, self.big_dog_button, white, blue
+        )
 
         player_board_width = self.cell_size * 5 + BETWEEN_CELLS * 4
 
@@ -123,17 +132,15 @@ class BoardInitializer:
 
         print(self.animal_board_coordinates)
 
-        CUBE_BUTTON = (650, 480, 200, 50)
-        cube_button_text_surface = font.render("Roll the dices", True, white)
-        py.draw.rect(window, red, CUBE_BUTTON)
+        self.cube_button = (650, 480, 200, 50)
+        cube_button_text_surface = self.font.render("Roll the dices", True, white)
+        py.draw.rect(window, red, self.cube_button)
         window.blit(
             cube_button_text_surface,
-            (CUBE_BUTTON[0] + 20, CUBE_BUTTON[1] + 10),
+            (self.cube_button[0] + 20, self.cube_button[1] + 10),
         )
 
         py.display.flip()
-
-        return self.cell_size, CUBE_BUTTON, SMALL_DOG_BUTTON, BIG_DOG_BUTTON, font
 
     # end def
 

@@ -11,13 +11,12 @@ class Image:
         self, x: float, y: float, image: Surface, width: float, height: float
     ) -> None:
         self.image = py.transform.scale(image, (width, height))
-        self.rect = image.get_rect()  # copy the image dimensions
-        # print("UUU")
+        self.rect = image.get_rect()
         self.rect.x = x
-        self.rect.y = y  # move to location
+        self.rect.y = y
 
     def draw(self, window: Surface) -> None:
-        window.blit(self.image, self.rect)  # paint it
+        window.blit(self.image, self.rect)
 
 
 class Animal(Enum):
@@ -110,7 +109,6 @@ def convert_animal_to_img(animal: Animal) -> Surface:
     img = None
     if not isinstance(animal, Animal) and not isinstance(animal, Predators):
         print("Nie zwierzę ", animal)
-        # We have a pair of animals
         if animal == Animal.RABBIT.value:
             img = py.image.load("Images/bunnypair.png")
         if animal == Animal.SHEEP.value:
@@ -122,7 +120,6 @@ def convert_animal_to_img(animal: Animal) -> Surface:
         if animal == Animal.HORSE.value:
             img = py.image.load("Images/horsepair.png")
         return img
-    # We have one animal
     if animal.value == Animal.RABBIT.value:
         img = py.image.load("Images/bunny.png")
     if animal.value == Animal.SHEEP.value:

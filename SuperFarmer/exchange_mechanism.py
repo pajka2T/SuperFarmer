@@ -15,6 +15,10 @@ class ExchangeMechanism:
     def __init__(
         self, window: Surface, board: BoardInitializer, no_players: int = 2
     ) -> None:
+        """
+        First value of for_exchange list represents an animal to exchange, second is equivalent to the number
+        of these animals and third represents an animal which player wants to get after exchange.
+        """
         self.window = window
         self.board = board
         self.no_players = no_players
@@ -35,6 +39,10 @@ class ExchangeMechanism:
         white: tuple[int, int, int] = (255, 255, 255),
         black: tuple[int, int, int] = (0, 0, 0),
     ) -> None:
+        """
+        Before clicking cube button we can exchange animals using this function.
+        """
+
         if (
             b > (players[player_turn].animals[Animal(a)] - 1) // 2
             and self.for_exchange[player_turn][0] is None
@@ -81,24 +89,9 @@ class ExchangeMechanism:
             ):
                 # Same animal clicked
                 print(players[player_turn].animals[Animal(a)])
-                print(
-                    "NORMAL: ",
-                    min(
-                        (b + 1) * 2,
-                        players[player_turn].animals[Animal(a)],
-                    )
-                    - self.start[player_turn],
-                )
-                print(
-                    "ABS: ",
-                    abs(
-                        min(
-                            (b + 1) * 2,
-                            players[player_turn].animals[Animal(a)],
-                        )
-                        - self.start[player_turn]
-                    ),
-                )
+                print("START, B: ", self.start[player_turn], b)
+                if b < self.start[player_turn]:
+                    b, self.start[player_turn] = self.start[player_turn] // 2, b
                 self.for_exchange[player_turn][1] = abs(
                     min(
                         (b + 1) * 2,

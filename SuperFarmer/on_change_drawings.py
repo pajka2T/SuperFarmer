@@ -22,6 +22,7 @@ def rotate_animation(
     image2: Surface,
     color: tuple[int, int, int],
     clock: Clock,
+    start_fps: int,
     x: float,
     y: float,
     diff: float,
@@ -32,13 +33,13 @@ def rotate_animation(
         rotated_image = py.transform.rotate(image, 9 * (40 - i))
         rotated_image2 = py.transform.rotate(image2, 9 * (40 - i))
         if i > 20:
-            clock.tick(i * 15)
+            clock.tick(i * 15 * start_fps / 100)
         elif i > 10:
-            clock.tick(i * 12)
+            clock.tick(i * 12 * start_fps / 100)
         elif i > 1:
-            clock.tick(i * 10)
+            clock.tick(i * 10 * start_fps / 100)
         else:
-            clock.tick(15)
+            clock.tick(start_fps * 3 / 4)
 
         # a = abs(width*math.sin(4.5*(10-i)))
         # b = abs(width*math.cos(4.5*(10-i)))
@@ -67,9 +68,8 @@ def rotate_animation(
 def draw_dogs(
     window: Surface,
     x1: float,
-    y1: float,
     x2: float,
-    y2: float,
+    y1: float,
     smalldog: Surface,
     bigdog: Surface,
     no_small_dogs_player_1: int,
@@ -79,23 +79,23 @@ def draw_dogs(
 ) -> None:
     font = py.font.Font("Fonts/BRLNSDB.ttf", 50)
     py.draw.rect(window, BLACK, (x1, y1, 100, 120))
-    py.draw.rect(window, BLACK, (x2, y2, 100, 120))
+    py.draw.rect(window, BLACK, (x2, y1, 100, 120))
     if no_small_dogs_player_1 > 0:
         textsurface = font.render(f"{no_small_dogs_player_1}", True, WHITE)
         window.blit(textsurface, (x1 + 10, y1 + 10))
         Image(x1 + 35, y1 + 10, smalldog, 50, 50).draw(window)
     if no_small_dogs_player_2 > 0:
         textsurface = font.render(f"{no_small_dogs_player_2}", True, WHITE)
-        window.blit(textsurface, (x2 + 10, y2 + 10))
-        Image(x2 + 35, y2 + 10, smalldog, 50, 50).draw(window)
+        window.blit(textsurface, (x2 + 10, y1 + 10))
+        Image(x2 + 35, y1 + 10, smalldog, 50, 50).draw(window)
     if no_big_dogs_player_1 > 0:
         textsurface = font.render(f"{no_big_dogs_player_1}", True, WHITE)
         window.blit(textsurface, (x1 + 10, y1 + 70))
         Image(x1 + 35, y1 + 70, bigdog, 50, 50).draw(window)
     if no_big_dogs_player_2 > 0:
         textsurface = font.render(f"{no_big_dogs_player_2}", True, WHITE)
-        window.blit(textsurface, (x2 + 10, y2 + 70))
-        Image(x2 + 35, y2 + 70, bigdog, 50, 50).draw(window)
+        window.blit(textsurface, (x2 + 10, y1 + 70))
+        Image(x2 + 35, y1 + 70, bigdog, 50, 50).draw(window)
 
 
 def update_board(
@@ -106,6 +106,9 @@ def update_board(
     animal_board_coordinates: list[dict],
     cell_size: float,
 ) -> None:
+    print("UUUUUUU")
+    print("BEFORE: ", animals_before)
+    print("NOW: ", animals_now)
     player_no = player.id
     for animal in animals_now:
         no_animals_before = animals_before[animal]
@@ -240,25 +243,29 @@ def update_board(
                     animal,
                     128,
                 )
-            elif no_animals_now == 1:
+            elif no_animals_now % 2 == 1:
                 print("TU: 1")
                 draw_animal(
                     window,
                     BLUE,
-                    animal_board_coordinates[player_no][animal][0][0],
-                    animal_board_coordinates[player_no][animal][0][1],
+                    animal_board_coordinates[player_no][animal][no_animals_now // 2][0],
+                    animal_board_coordinates[player_no][animal][no_animals_now // 2][1],
                     cell_size,
                     10,
                     animal,
                     255,
                 )
-            elif no_animals_now == 2:
+            elif no_animals_now % 2 == 0:
                 print("TU: 2")
                 draw_animal(
                     window,
                     BLUE,
-                    animal_board_coordinates[player_no][animal][0][0],
-                    animal_board_coordinates[player_no][animal][0][1],
+                    animal_board_coordinates[player_no][animal][
+                        no_animals_now // 2 - 1
+                    ][0],
+                    animal_board_coordinates[player_no][animal][
+                        no_animals_now // 2 - 1
+                    ][1],
                     cell_size,
                     10,
                     animal.value,

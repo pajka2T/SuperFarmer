@@ -63,6 +63,7 @@ def check_win(player: Player, win_list: list[bool]) -> bool:
             return False
     print("WINWINWIN")
     win_list[player.id] = True
+    return True
 
 
 # end def
@@ -78,13 +79,6 @@ def draw_alert(
 ) -> tuple[float, float, float, float]:
     alert_rect = (0.3 * window.get_width(), 0.3 * window.get_height(), 500, 300)
     py.draw.rect(window, white, alert_rect)
-    # py.draw.rect(WINDOW, WHITE, alert_rect, 3)
-
-    # alert_text_surface_1 = font.render("How many animals would you like", True, BLACK)
-    # alert_text_surface_2 = font.render("                      to exchange?", True, BLACK)
-    # #alert_text_rect = alert_text_surface.get_rect(center=alert_rect.center)
-    # WINDOW.blit(alert_text_surface_1, (alert_rect[0]+20, alert_rect[1]+20))
-    # WINDOW.blit(alert_text_surface_2, (alert_rect[0]+20, alert_rect[1]+50))
 
     win_text_surface = font.render(message, True, black)
     window.blit(win_text_surface, (alert_rect[0] + 20, alert_rect[1] + 20))

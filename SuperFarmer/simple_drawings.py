@@ -65,7 +65,6 @@ def draw_additional_animals(
         (x2 + cell_size + cell_size / 1.8, y + cell_size / 2.4),
         cell_size / 2.4,
     )
-    # print(y, " ", y+(cell_size/1.7)*2)
     Image(
         x2 + cell_size + cell_size / 1.8 + cell_size / 12 - cell_size / 2.4,
         y + cell_size / 2.4 + cell_size / 12 - cell_size / 2.4,
@@ -73,5 +72,3 @@ def draw_additional_animals(
         cell_size * size,
         cell_size * size,
     ).draw(window)
-
-    # print(animalBoardCoordinates[player][animalnumber][5-animalnumber])
