@@ -15,12 +15,12 @@ from util import Image
 
 class GameLogic:
     def __init__(
-        self, window: Surface, board: BoardInitializer, players: list[Player]
+        self, window: Surface, board: BoardInitializer, players: list[Player], starting_player_number: int = 0
     ) -> None:
         self.window = window
         self.board = board
         self.players = players
-        self.player_turn = 0
+        self.player_turn = starting_player_number
         self.exc_mech = ExchangeMechanism(window, board)
         self.clock = py.time.Clock()
         self.win = [False for _ in range(len(players))]
@@ -31,15 +31,15 @@ class GameLogic:
         black = (0, 0, 0)
         white = (255, 255, 255)
         self.clock.tick(50)
-        start_rotation_fps = 50
+        start_rotation_fps = 100
 
         small_dog = py.image.load("Images/smalldog.png")
         big_dog = py.image.load("Images/bigdog.png")
 
-        CUBERESULT = [(650, 380), (750, 380)]
-        CUBE_RESULT_MARKING_RECT = (650, 370, 200, 100)
+        cube_result = [(650, 380), (750, 380)]
+        cube_result_marking_rect = (650, 370, 200, 100)
 
-        INFO_RECT = (
+        info_rect = (
             0.2 * self.window.get_width(),
             0.05 * self.window.get_height(),
             650,
@@ -66,14 +66,18 @@ class GameLogic:
                     self.players,
                     self.player_turn,
                     self.win,
-                    INFO_RECT,
+                    info_rect,
                     self.board.font,
                 )
             else:
                 self.exc_mech.reset_for_exchange(self.players[self.player_turn])
 
+            for el in self.win:
+                if el:
+                    someone_won = True
+
             if is_mouse_over(self.board.cube_button):
-                py.draw.rect(self.window, black, INFO_RECT)
+                py.draw.rect(self.window, black, info_rect)
                 py.display.flip()
                 message = ""
                 self.exc_mech.reset_for_exchange(self.players[self.player_turn])
@@ -85,15 +89,15 @@ class GameLogic:
                     drawn_animals[0], drawn_animals[1]
                 )
 
-                py.draw.rect(self.window, black, CUBE_RESULT_MARKING_RECT)
-                # Image(CUBERESULT[0][0], CUBERESULT[0][1] - 10, convert_animal_to_img(drawn_animals[0]), 100,
+                py.draw.rect(self.window, black, cube_result_marking_rect)
+                # Image(cube_result[0][0], cube_result[0][1] - 10, convert_animal_to_img(drawn_animals[0]), 100,
                 #      100).draw(self.window)
-                # Image(CUBERESULT[1][0], CUBERESULT[1][1] - 10, convert_animal_to_img(drawn_animals[1]), 100,
+                # Image(cube_result[1][0], cube_result[1][1] - 10, convert_animal_to_img(drawn_animals[1]), 100,
                 #      100).draw(self.window)
-                # py.draw.rect(self.window, black, CUBE_RESULT_MARKING_RECT)
-                # Image(CUBERESULT[0][0], CUBERESULT[0][1] - 10, convert_animal_to_dice_img(drawn_animals[0], 1), 100,
+                # py.draw.rect(self.window, black, cube_result_marking_rect)
+                # Image(cube_result[0][0], cube_result[0][1] - 10, convert_animal_to_dice_img(drawn_animals[0], 1), 100,
                 #       100).draw(self.window)
-                # Image(CUBERESULT[1][0], CUBERESULT[1][1] - 10, convert_animal_to_dice_img(drawn_animals[1], 2), 100,
+                # Image(cube_result[1][0], cube_result[1][1] - 10, convert_animal_to_dice_img(drawn_animals[1], 2), 100,
                 #       100).draw(self.window)
                 rotate_animation(
                     self.window,
@@ -102,12 +106,12 @@ class GameLogic:
                     black,
                     self.clock,
                     start_rotation_fps,
-                    CUBERESULT[0][0] + 40,
-                    CUBERESULT[0][1] + 40,
+                    cube_result[0][0] + 40,
+                    cube_result[0][1] + 40,
                     100,
                 )
                 # board.rotate_animation(self.window, convert_animal_to_dice_img(drawn_animals[1], 2), black, CLOCK,
-                #                       CUBERESULT[0][0] + 140, CUBERESULT[0][1] + 40)
+                #                       cube_result[0][0] + 140, cube_result[0][1] + 40)
 
                 print(res1, res2)
                 if res1 == util.Predators.FOX:
@@ -123,7 +127,7 @@ class GameLogic:
                     print("AAA")
 
                 alert = self.board.font.render(message, True, white)
-                self.window.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
+                self.window.blit(alert, (info_rect[0], info_rect[1]))
 
                 update_board(
                     self.window,
@@ -163,9 +167,9 @@ class GameLogic:
                 else:
                     message = "You successfully bought a small dog!"
 
-                py.draw.rect(self.window, black, INFO_RECT)
+                py.draw.rect(self.window, black, info_rect)
                 alert = self.board.font.render(message, True, white)
-                self.window.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
+                self.window.blit(alert, (info_rect[0], info_rect[1]))
                 update_board(
                     self.window,
                     self.players[self.player_turn],
@@ -199,9 +203,9 @@ class GameLogic:
                 else:
                     message = "You successfully bought a big dog!"
 
-                py.draw.rect(self.window, black, INFO_RECT)
+                py.draw.rect(self.window, black, info_rect)
                 alert = self.board.font.render(message, True, white)
-                self.window.blit(alert, (INFO_RECT[0], INFO_RECT[1]))
+                self.window.blit(alert, (info_rect[0], info_rect[1]))
                 update_board(
                     self.window,
                     self.players[self.player_turn],
@@ -230,15 +234,15 @@ class GameLogic:
     # end def
 
     def check_turn(self) -> None:
-        redarrow = py.image.load("Images/down-arrow.png")
-        bluearrow = py.image.load("Images/arrow-left.png")
-        bluearrow = py.transform.rotate(bluearrow, 90)
+        red_arrow = py.image.load("Images/down-arrow.png")
+        blue_arrow = py.image.load("Images/arrow-left.png")
+        blue_arrow = py.transform.rotate(blue_arrow, 90)
 
         black = (0, 0, 0)
 
         if self.player_turn == 0:
             py.draw.rect(self.window, black, (1400, 370, 70, 70))
-            Image(30, 370, redarrow, 70, 70).draw(self.window)
+            Image(30, 370, red_arrow, 70, 70).draw(self.window)
         elif self.player_turn == 1:
             py.draw.rect(self.window, black, (30, 370, 70, 70))
-            Image(1400, 370, bluearrow, 70, 70).draw(self.window)
+            Image(1400, 370, blue_arrow, 70, 70).draw(self.window)

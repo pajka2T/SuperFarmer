@@ -70,12 +70,14 @@ class App:
         # For alert
         show_alert = False
         ok_button = None
+        game_end = False
 
         game_logic = GameLogic(WINDOW, board, self.players)
 
         while App.running:
-            on_hover(WINDOW, board, 0)
-            py.display.flip()
+            if not game_end:
+                on_hover(WINDOW, board, game_logic.player_turn)
+                py.display.flip()
             for event in py.event.get():
                 if event.type == QUIT:
                     App.running = False
@@ -90,18 +92,22 @@ class App:
                     ):
                         show_alert = False
                         print(show_alert)
-                if game_logic.check(event):
+                if not game_end and game_logic.check(event):
                     print("WIN AAA")
-                    App.running = False
-                    # ok_button = draw_alert(WINDOW, "", board.font)
+                    game_end = True
+                    ok_button = draw_alert(WINDOW,
+                                           "Player " + str(game_logic.win.index(True)) + " won! Congrats!",
+                                           board.font
+                                           )
+                    py.display.flip()
             py.display.flip()
         draw_alert(
             WINDOW,
             "Player " + str(game_logic.win.index(True)) + " won! Congrats!",
-            board.font,
+            board.font
         )
         py.display.flip()
-        py.time.delay(100000)
+        py.time.delay(5)
 
         py.quit()
 

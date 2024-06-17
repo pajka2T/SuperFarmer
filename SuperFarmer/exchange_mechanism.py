@@ -90,8 +90,8 @@ class ExchangeMechanism:
                 # Same animal clicked
                 print(players[player_turn].animals[Animal(a)])
                 print("START, B: ", self.start[player_turn], b)
-                if b < self.start[player_turn]:
-                    b, self.start[player_turn] = self.start[player_turn] // 2, b
+                if b < self.start[player_turn] // 2:
+                    b, self.start[player_turn] = self.start[player_turn] // 2, b * 2
                 self.for_exchange[player_turn][1] = abs(
                     min(
                         (b + 1) * 2,

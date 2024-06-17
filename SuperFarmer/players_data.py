@@ -5,8 +5,8 @@ class Player:
     def __init__(self, id: int) -> None:
         self.id = id
         self.animals = {
-            Animal.RABBIT: 1,
-            Animal.SHEEP: 1,
+            Animal.RABBIT: 0,
+            Animal.SHEEP: 0,
             Animal.PIG: 0,
             Animal.COW: 0,
             Animal.HORSE: 0,
