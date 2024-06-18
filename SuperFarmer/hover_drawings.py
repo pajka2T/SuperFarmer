@@ -103,15 +103,15 @@ def on_hover_game(
 
 
 def on_hover_menu(window: Surface, menu: MenuInitializer):
-    start_text_surface = menu.font.render("Start game", True, white)
+    start_text_surface = menu.font.render("Start new game", True, white)
 
     if is_mouse_over(menu.start_button):
         py.draw.rect(window, dark_green, menu.start_button)
         window.blit(
-            start_text_surface, (menu.start_button[0] + 10, menu.start_button[1] + 10)
+            start_text_surface, (menu.start_button[0] + 10, menu.start_button[1] + 40)
         )
     else:
         py.draw.rect(window, green, menu.start_button)
         window.blit(
-            start_text_surface, (menu.start_button[0] + 10, menu.start_button[1] + 10)
+            start_text_surface, (menu.start_button[0] + 10, menu.start_button[1] + 40)
         )

@@ -26,15 +26,15 @@ class MenuInitializer:
         )
 
         self.start_button = (
-            window.get_width() / 2 - 100,
-            window.get_height() / 2 - 50,
-            200,
+            window.get_width() / 2 - 75,
+            window.get_height() / 2 - 25,
+            220,
             100,
         )
         py.draw.rect(window, green, self.start_button)
-        start_text_surface = self.font.render("Start game", True, white)
+        start_text_surface = self.font.render("Start new game", True, white)
         window.blit(
-            start_text_surface, (self.start_button[0] + 10, self.start_button[1] + 10)
+            start_text_surface, (self.start_button[0] + 10, self.start_button[1] + 50)
         )
 
         py.display.flip()

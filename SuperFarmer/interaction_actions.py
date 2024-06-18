@@ -49,7 +49,6 @@ def get_clicked_circle(
             <= cell_size / 2
         ):
             b = i
-    print("Kliknąłem w: ", a, " ", b)
     return a, b
 
 
@@ -61,7 +60,6 @@ def check_win(player: Player, win_list: list[bool]) -> bool:
         if count <= 0:
             print(animal, count)
             return False
-    print("WINWINWIN")
     win_list[player.id] = True
     return True
 
@@ -73,23 +71,12 @@ def draw_alert(
     window: Surface,
     message: str,
     font: Font,
-) -> tuple[float, float, float, float]:
+) -> None:
     alert_rect = (0.3 * window.get_width(), 0.3 * window.get_height(), 500, 300)
-    py.draw.rect(window, white, alert_rect)
 
-    win_text_surface = font.render(message, True, black)
+    win_text_surface = font.render(message, True, white)
     window.blit(win_text_surface, (alert_rect[0] + 20, alert_rect[1] + 20))
-
-    OK_BUTTON = (
-        alert_rect[0] + alert_rect[2] / 2 - 50,
-        alert_rect[1] + alert_rect[3] - 100,
-        100,
-        50,
-    )
-    py.draw.rect(window, green, OK_BUTTON)
-    ok_text_surface = font.render("OK", True, white)
-    window.blit(ok_text_surface, (OK_BUTTON[0] + 27, OK_BUTTON[1] + 10))
-    return OK_BUTTON
+    py.display.flip()
 
 
 # end def

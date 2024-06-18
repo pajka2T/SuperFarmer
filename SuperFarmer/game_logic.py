@@ -93,15 +93,7 @@ class GameLogic:
                 )
 
                 py.draw.rect(self.window, black, cube_result_marking_rect)
-                # Image(cube_result[0][0], cube_result[0][1] - 10, convert_animal_to_img(drawn_animals[0]), 100,
-                #      100).draw(self.window)
-                # Image(cube_result[1][0], cube_result[1][1] - 10, convert_animal_to_img(drawn_animals[1]), 100,
-                #      100).draw(self.window)
-                # py.draw.rect(self.window, black, cube_result_marking_rect)
-                # Image(cube_result[0][0], cube_result[0][1] - 10, convert_animal_to_dice_img(drawn_animals[0], 1), 100,
-                #       100).draw(self.window)
-                # Image(cube_result[1][0], cube_result[1][1] - 10, convert_animal_to_dice_img(drawn_animals[1], 2), 100,
-                #       100).draw(self.window)
+
                 rotate_animation(
                     self.window,
                     util.convert_animal_to_dice_img(drawn_animals[0], 1),
@@ -113,8 +105,6 @@ class GameLogic:
                     cube_result[0][1] + 40,
                     100,
                 )
-                # board.rotate_animation(self.window, convert_animal_to_dice_img(drawn_animals[1], 2), black, CLOCK,
-                #                       cube_result[0][0] + 140, cube_result[0][1] + 40)
 
                 print(res1, res2)
                 if res1 == util.Predators.FOX:

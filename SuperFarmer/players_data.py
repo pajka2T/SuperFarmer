@@ -54,7 +54,6 @@ class Player:
         return_info_1 = "OK"
         return_info_2 = "OK"
 
-        # Sprawdzenie, czy zwierzęta nie są drapieżnikami
         if animal1 == Predators.FOX or animal2 == Predators.FOX:
             print("Drugi")
             if self.dogs[Defence.SMALLDOG] > 0:
@@ -120,18 +119,14 @@ class Player:
         animal_to: Animal,
         bank: Bank,
     ) -> int:
-        # Nie powinny występować takie problemy, ale ten warunek jest dla bezpieczeństwa przed wyrzuceniem błędu.
         if not isinstance(animal_from, Animal) or not isinstance(animal_to, Animal):
             return -1
 
-        # Wymieniam zwierzęta na te rzadsze.
         if animal_to in exchange_cost[animal_from]:
-            # Mam za mało zwierząt, żeby wymienić
             print("Exchange_cost: ", exchange_cost[animal_from][animal_to])
             if no_animals_to_exchange < exchange_cost[animal_from][animal_to]:
                 return -2
 
-            # Mam wystarczającą liczbę zwierząt na wymianę
             no_new_animals = min(
                 no_animals_to_exchange // exchange_cost[animal_from][animal_to],
                 bank.animals[animal_to],
@@ -147,7 +142,6 @@ class Player:
             if no_new_animals <= 0:
                 return 2
             return 1
-        # Wymieniam zwierzęta na te częściej występujące
         else:
             no_new_animals = min(
                 no_animals_to_exchange * exchange_cost[animal_to][animal_from],

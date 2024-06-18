@@ -100,9 +100,6 @@ def update_board(
     animal_board_coordinates: list[dict],
     cell_size: float,
 ) -> None:
-    print("UUUUUUU")
-    print("BEFORE: ", animals_before)
-    print("NOW: ", animals_now)
     player_no = player.id
     for animal in animals_now:
         no_animals_before = animals_before[animal]
@@ -122,14 +119,7 @@ def update_board(
             black_marking_square[1] + cell_size * 3 / 4,
         )
 
-        # Adding new animals
         if no_animals_before < no_animals_now:
-            print("Drawing new animals which values are ", animal.value)
-            # There are places for animals
-            # for i in range(no_animals_before, min(no_animals_now, 5-animal.value)):
-            #     draw_animal(window, BLUE, animal_board_coordinates[player_no][animal.value][i][0],
-            #                 animal_board_coordinates[player_no][animal.value][i][1], cell_size, 10, animal, 255)
-            # There are places for animals and we'll have new pair
             if no_animals_before % 2 == 1 and no_animals_before < 10 - animal.value * 2:
                 draw_animal(
                     window,
@@ -170,7 +160,6 @@ def update_board(
                     animal,
                     255,
                 )
-            # Drawing additional animals
             if no_animals_now > 10 - animal.value * 2:
                 py.draw.rect(window, black, black_marking_square)
                 draw_additional_animals(
@@ -197,9 +186,8 @@ def update_board(
                 text = "+" + str(no_animals_now - (10 - animal.value * 2))
                 text_surface = font2.render(text, True, white)
                 window.blit(text_surface, number_destination)
-        # Removing some animals
+
         elif no_animals_now < no_animals_before:
-            print("Removing animals which values are ", animal.value)
             for i in range(
                 max(no_animals_now + 1, 0),
                 min(no_animals_before + 1, 10 - animal.value * 2),
@@ -214,9 +202,7 @@ def update_board(
                     animal_board_coordinates[player_no][animal][i // 2][1],
                     cell_size,
                 )
-            # Ifs for easier problem-solving
             if no_animals_now == 0:
-                print("TU: 0")
                 draw_animal(
                     window,
                     blue,
@@ -228,7 +214,6 @@ def update_board(
                     128,
                 )
             elif no_animals_now % 2 == 1 and no_animals_now < 10 - animal.value * 2:
-                print("TU: 1")
                 draw_animal(
                     window,
                     blue,
@@ -240,7 +225,6 @@ def update_board(
                     255,
                 )
             elif no_animals_now % 2 == 0 and no_animals_now < 10 - animal.value * 2:
-                print("TU: 2")
                 draw_animal(
                     window,
                     blue,
@@ -256,13 +240,7 @@ def update_board(
                     255,
                 )
             py.draw.rect(window, black, black_marking_square)
-            if no_animals_now <= 10 - animal.value * 2 < no_animals_before:
-                print("AAAAAAAA")
-                # Removing additional animals
-                # py.draw.rect(window, BLACK, black_marking_square)
-            elif no_animals_now > 10 - animal.value * 2:
-                print("TUUUUUUU")
-                # Changing value of additional animals printed number
+            if no_animals_now > 10 - animal.value * 2:
                 draw_additional_animals(
                     window,
                     blue,
