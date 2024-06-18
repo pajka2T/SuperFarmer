@@ -5,6 +5,9 @@ from util import blue, red, white
 
 
 class BoardInitializer:
+    """
+    Class responsible for creating and storing all board data.
+    """
     def __init__(self, font: py.font.Font, no_players: int = 2):
         self.no_players = no_players
         self.animal_board_coordinates = None
@@ -15,9 +18,12 @@ class BoardInitializer:
         self.font = font
 
     def create_board(self, window: Surface) -> None:
+        """
+        Creates new board for game containing everything required to play - players' boards, buttons, images.
+        :param window: Surface
+        :return: None
+        """
         window.fill((0, 0, 0, 0))
-
-        logo2 = py.image.load("Images/Logo2.png").convert_alpha()
 
         screeninfo = py.display.Info()
         SCREENWIDTH = screeninfo.current_w

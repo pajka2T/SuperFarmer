@@ -14,6 +14,18 @@ def draw_animal(
     animal: Animal,
     alpha: int,
 ) -> None:
+    """
+    Function which draws animal image in specified place.
+    :param window:
+    :param color1:
+    :param center_x:
+    :param center_y:
+    :param cell_size:
+    :param size:
+    :param animal:
+    :param alpha:
+    :return:
+    """
     py.draw.circle(window, color1, (center_x, center_y), cell_size / 2)
     img = convert_animal_to_img(animal)
     img.set_alpha(alpha)
@@ -34,6 +46,16 @@ def draw_empty_circles(
     y: float,
     cell_size: float,
 ) -> None:
+    """
+    Function which draws empty animal circle in specified place
+    :param window:
+    :param color1:
+    :param color2:
+    :param x:
+    :param y:
+    :param cell_size:
+    :return:
+    """
     py.draw.circle(window, color1, (x, y), cell_size / 2)
     py.draw.circle(window, color2, (x, y), cell_size / 2.2)
 
@@ -50,6 +72,20 @@ def draw_additional_animals(
     size: float,
     cell_size: float,
 ) -> None:
+    """
+    Function drawing additional animals.
+    :param window:
+    :param color1:
+    :param color2:
+    :param color3:
+    :param x:
+    :param x2:
+    :param y:
+    :param animal:
+    :param size:
+    :param cell_size:
+    :return:
+    """
     py.draw.circle(
         window, color3, (x + cell_size / 1.8, y + cell_size / 1.8), cell_size / 2.4
     )

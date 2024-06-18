@@ -5,12 +5,20 @@ from util import black, green, light_yellow, white
 
 
 class MenuInitializer:
+    """
+    Class responsible for creating menu.
+    """
     def __init__(self, font: py.font.Font) -> None:
         self.start_button = None
         self.font = font
         self.start_button = None
 
     def create_menu(self, window: Surface) -> None:
+        """
+        Function creating menu
+        :param window:
+        :return:
+        """
         whole_menu = (
             window.get_width() / 4,
             window.get_height() / 4,

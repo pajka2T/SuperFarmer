@@ -6,7 +6,9 @@ from pygame import Surface
 
 
 class Image:
-
+    """
+    Class responsible for creating and drawing images.
+    """
     def __init__(
         self, x: float, y: float, image: Surface, width: float, height: float
     ) -> None:
@@ -16,6 +18,11 @@ class Image:
         self.rect.y = y
 
     def draw(self, window: Surface) -> None:
+        """
+        Draws image on specified place.
+        :param window:
+        :return:
+        """
         window.blit(self.image, self.rect)
 
 

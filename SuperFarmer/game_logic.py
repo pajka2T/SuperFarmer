@@ -14,6 +14,9 @@ from util import Bank, Image, black, white
 
 
 class GameLogic:
+    """
+    Class responsible for tracking all actions happening during gameplay.
+    """
     def __init__(
         self,
         window: Surface,
@@ -29,9 +32,15 @@ class GameLogic:
         self.exc_mech = ExchangeMechanism(window, board, self.bank)
         self.clock = py.time.Clock()
         self.win = [False for _ in range(len(players))]
+        self.info_rect = None
 
-    def check(self, event):
-
+    def gameplay(self, event) -> bool:
+        """
+        It is responsible for whole game logic and gameplay.
+        Returns True if someone won or False otherwise.
+        :param event:
+        :return: bool
+        """
         someone_won = False
         self.clock.tick(50)
         start_rotation_fps = 100
@@ -42,7 +51,7 @@ class GameLogic:
         cube_result = [(650, 380), (750, 380)]
         cube_result_marking_rect = (650, 370, 200, 100)
 
-        info_rect = (
+        self.info_rect = (
             0.2 * self.window.get_width(),
             0.05 * self.window.get_height(),
             650,
@@ -69,7 +78,7 @@ class GameLogic:
                     self.players,
                     self.player_turn,
                     self.win,
-                    info_rect,
+                    self.info_rect,
                     self.board.font,
                 )
             else:
@@ -80,7 +89,7 @@ class GameLogic:
                     someone_won = True
 
             if is_mouse_over(self.board.cube_button):
-                py.draw.rect(self.window, black, info_rect)
+                py.draw.rect(self.window, black, self.info_rect)
                 py.display.flip()
                 message = ""
                 self.exc_mech.reset_for_exchange(self.players[self.player_turn])
@@ -120,7 +129,7 @@ class GameLogic:
                     print("AAA")
 
                 alert = self.board.font.render(message, True, white)
-                self.window.blit(alert, (info_rect[0], info_rect[1]))
+                self.window.blit(alert, (self.info_rect[0], self.info_rect[1]))
 
                 update_board(
                     self.window,
@@ -160,9 +169,9 @@ class GameLogic:
                 else:
                     message = "You successfully bought a small dog!"
 
-                py.draw.rect(self.window, black, info_rect)
+                py.draw.rect(self.window, black, self.info_rect)
                 alert = self.board.font.render(message, True, white)
-                self.window.blit(alert, (info_rect[0], info_rect[1]))
+                self.window.blit(alert, (self.info_rect[0], self.info_rect[1]))
                 update_board(
                     self.window,
                     self.players[self.player_turn],
@@ -196,9 +205,9 @@ class GameLogic:
                 else:
                     message = "You successfully bought a big dog!"
 
-                py.draw.rect(self.window, black, info_rect)
+                py.draw.rect(self.window, black, self.info_rect)
                 alert = self.board.font.render(message, True, white)
-                self.window.blit(alert, (info_rect[0], info_rect[1]))
+                self.window.blit(alert, (self.info_rect[0], self.info_rect[1]))
                 update_board(
                     self.window,
                     self.players[self.player_turn],
@@ -227,6 +236,11 @@ class GameLogic:
     # end def
 
     def check_turn(self) -> None:
+        """
+        Function responsible for drawing proper arrows according to player turn.
+        :return:
+        """
+
         red_arrow = py.image.load("Images/down-arrow.png")
         blue_arrow = py.image.load("Images/arrow-left.png")
         blue_arrow = py.transform.rotate(blue_arrow, 90)

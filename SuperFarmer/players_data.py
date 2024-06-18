@@ -2,6 +2,9 @@ from util import Animal, Bank, Defence, Predators, exchange_cost
 
 
 class Player:
+    """
+    Class responsible for storing all player data.
+    """
     def __init__(self, id: int) -> None:
         self.id = id
         self.animals = {
@@ -16,9 +19,15 @@ class Player:
     def add_animals(
         self, animal1: Animal, animal2: Animal, bank: Bank
     ) -> tuple[str, str]:
+        """
+        Function adding animals to the player bank.
+        :param animal1:
+        :param animal2:
+        :param bank:
+        :return:
+        """
         print(animal1, animal2)
 
-        # Oba zwierzęta są hodowlane i są takie same
         if (
             isinstance(animal1, Animal)
             and isinstance(animal2, Animal)
@@ -33,18 +42,14 @@ class Player:
                 reproduction = min(bank.animals[animal1], self.animals[animal1] // 2)
                 self.animals[animal1] += reproduction
                 bank.animals[animal1] -= reproduction
-            print(self.animals)
-            print("Bank: ", bank)
             return "OK", "OK"
         if isinstance(animal1, Animal) and self.animals[animal1] > 0:
-            print("Trzeci")
             self.animals[animal1] += min(1, bank.animals[animal1])
             bank.animals[animal1] -= min(1, bank.animals[animal1])
             reproduction = min(bank.animals[animal1], self.animals[animal1] // 2)
             self.animals[animal1] += reproduction
             bank.animals[animal1] -= reproduction
         if isinstance(animal2, Animal) and self.animals[animal2] > 0:
-            print("Czwarty")
             self.animals[animal2] += min(1, bank.animals[animal2])
             bank.animals[animal2] -= min(1, bank.animals[animal2])
             reproduction = min(bank.animals[animal2], self.animals[animal2] // 2)
@@ -55,7 +60,6 @@ class Player:
         return_info_2 = "OK"
 
         if animal1 == Predators.FOX or animal2 == Predators.FOX:
-            print("Drugi")
             if self.dogs[Defence.SMALLDOG] > 0:
                 self.dogs[Defence.SMALLDOG] -= 1
                 bank.dogs[Defence.SMALLDOG] += 1
@@ -82,13 +86,16 @@ class Player:
                 self.animals[Animal.COW] = 0
                 return_info_2 = Predators.WOLF
 
-        print(self.animals)
-        print(bank)
         return return_info_1, return_info_2
 
     # end def
 
     def buy_small_dog(self, bank: Bank) -> int:
+        """
+        Function which allows player to buy a small dog.
+        :param bank:
+        :return:
+        """
         if self.animals[Animal.SHEEP] < 1:
             return -1
         if bank.dogs[Defence.SMALLDOG] <= 0:
@@ -101,6 +108,11 @@ class Player:
     # end def
 
     def buy_big_dog(self, bank: Bank) -> int:
+        """
+            Function which allows player to buy a big dog.
+            :param bank:
+            :return:
+        """
         if self.animals[Animal.COW] < 1:
             return -1
         if bank.dogs[Defence.BIGDOG] <= 0:
@@ -119,11 +131,18 @@ class Player:
         animal_to: Animal,
         bank: Bank,
     ) -> int:
+        """
+        Function allowing player to exchange animals.
+        :param animal_from:
+        :param no_animals_to_exchange:
+        :param animal_to:
+        :param bank:
+        :return:
+        """
         if not isinstance(animal_from, Animal) or not isinstance(animal_to, Animal):
             return -1
 
         if animal_to in exchange_cost[animal_from]:
-            print("Exchange_cost: ", exchange_cost[animal_from][animal_to])
             if no_animals_to_exchange < exchange_cost[animal_from][animal_to]:
                 return -2
 
@@ -166,6 +185,11 @@ class Player:
 
 
 def create_players(n: int) -> list[Player]:
+    """
+    Function creating list of players.
+    :param n:
+    :return:
+    """
     players = []
     for i in range(0, n):
         new_player = Player(i)

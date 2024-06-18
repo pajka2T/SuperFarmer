@@ -71,6 +71,20 @@ def draw_dogs(
     no_small_dogs_player_2: int,
     no_big_dogs_player_2: int,
 ) -> None:
+    """
+    Function drawing actual number of dogs which every player has, when player buy or lose a dog.
+    :param window:
+    :param x1:
+    :param x2:
+    :param y1:
+    :param smalldog:
+    :param bigdog:
+    :param no_small_dogs_player_1:
+    :param no_big_dogs_player_1:
+    :param no_small_dogs_player_2:
+    :param no_big_dogs_player_2:
+    :return:
+    """
     font = py.font.Font("Fonts/BRLNSDB.ttf", 50)
     py.draw.rect(window, black, (x1, y1, 100, 120))
     py.draw.rect(window, black, (x2, y1, 100, 120))
@@ -100,6 +114,16 @@ def update_board(
     animal_board_coordinates: list[dict],
     cell_size: float,
 ) -> None:
+    """
+    Function which updates the board when there is a change in player's animals dictionary.
+    :param window:
+    :param player:
+    :param animals_before: Dict[Animal, int] - animals which player had before the change
+    :param animals_now: Dict[Animal, int] - animals which player has after the change
+    :param animal_board_coordinates:
+    :param cell_size:
+    :return:
+    """
     player_no = player.id
     for animal in animals_now:
         no_animals_before = animals_before[animal]
@@ -279,6 +303,18 @@ def mark_animals_for_exchange(
     cell_size: float,
     color: tuple[int, int, int] = blue3,
 ) -> None:
+    """
+    Function marking animals which are going to be exchanged.
+    :param window:
+    :param player:
+    :param animal:
+    :param first_animal:
+    :param last_animal:
+    :param animal_board_coordinates:
+    :param cell_size:
+    :param color:
+    :return:
+    """
     player_no = player.id
     print(animal, player.animals)
     for i in range(
@@ -311,6 +347,17 @@ def unmark_animals_for_exchange(
     animal_board_coordinates: list[dict],
     cell_size: float,
 ):
+    """
+    Function unmarking animals which were supposed to be exchanged, but the exchanged was stopped.
+    :param window:
+    :param player:
+    :param animal:
+    :param first_animal:
+    :param no_exchanged_animals:
+    :param animal_board_coordinates:
+    :param cell_size:
+    :return:
+    """
     mark_animals_for_exchange(
         window,
         player,

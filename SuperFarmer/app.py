@@ -66,12 +66,13 @@ class App:
                                 last_starting_player + 1
                             ) % board.no_players
                             game_logic.restart_game(board, starting_player)
-                if not game_end and not menu_shown and game_logic.check(event):
+                if not game_end and not menu_shown and game_logic.gameplay(event):
                     game_end = True
                     draw_alert(
                         WINDOW,
                         "Player " + str(game_logic.win.index(True)) + " won! Congrats!",
                         board.font,
+                        game_logic.info_rect
                     )
                     py.display.flip()
                     py.time.delay(2000)

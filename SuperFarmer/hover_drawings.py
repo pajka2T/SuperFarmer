@@ -20,6 +20,16 @@ def on_hover_game(
         (38, 125, 128),
     ],
 ) -> None:
+    """
+    Function responsible for all on hover drawings during game.
+    :param window: Surface
+    :param board: BoardInitializer
+    :param player_turn: int
+    :param no_players: int
+    :param cube_button_font: py.font.Font
+    :param colors_list: list[tuple[int, int, int]]
+    :return:
+    """
     colors = [[] for _ in range(no_players)]
     for i in range(no_players):
         for j in range(i * 2, (i + 1) * 2):
@@ -103,6 +113,12 @@ def on_hover_game(
 
 
 def on_hover_menu(window: Surface, menu: MenuInitializer):
+    """
+    Function responsible for on hover drawing when menu is shown.
+    :param window: Surface
+    :param menu: MenuInitializer
+    :return:
+    """
     start_text_surface = menu.font.render("Start new game", True, white)
 
     if is_mouse_over(menu.start_button):
