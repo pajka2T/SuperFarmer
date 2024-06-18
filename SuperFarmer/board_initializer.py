@@ -1,29 +1,22 @@
 import math
 
 from simple_drawings import *
+from util import blue, red, white
 
 
 class BoardInitializer:
-    def __init__(self, no_players: int = 2):
+    def __init__(self, font: py.font.Font, no_players: int = 2):
         self.no_players = no_players
         self.animal_board_coordinates = None
         self.cell_size = None
         self.cube_button = None
         self.small_dog_button = None
         self.big_dog_button = None
-        self.font = None
+        self.font = font
 
-    def create_board(self, window: Surface) -> (
-        int,
-        tuple[int, int, int, int],
-        tuple[int, int, int, int],
-        tuple[int, int, int, int],
-        py.font.Font,
-    ):
-        blue = (52, 229, 235)
-        white = (255, 255, 255)
-        red = (255, 0, 0)
-        self.font = py.font.Font("Fonts/BRLNSDB.ttf", 28)
+    def create_board(self, window: Surface) -> None:
+        window.fill((0, 0, 0, 0))
+
         logo2 = py.image.load("Images/Logo2.png").convert_alpha()
 
         screeninfo = py.display.Info()

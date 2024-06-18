@@ -7,13 +7,7 @@ from pygame.time import Clock
 from players_data import Player
 from simple_drawings import (draw_additional_animals, draw_animal,
                              draw_empty_circles)
-from util import Animal, Image
-
-BLUE = (52, 229, 235)
-BLUE2 = (93, 190, 194)
-BLUE3 = (38, 125, 128)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+from util import Animal, Image, black, blue, blue2, blue3, white
 
 
 def rotate_animation(
@@ -78,22 +72,22 @@ def draw_dogs(
     no_big_dogs_player_2: int,
 ) -> None:
     font = py.font.Font("Fonts/BRLNSDB.ttf", 50)
-    py.draw.rect(window, BLACK, (x1, y1, 100, 120))
-    py.draw.rect(window, BLACK, (x2, y1, 100, 120))
+    py.draw.rect(window, black, (x1, y1, 100, 120))
+    py.draw.rect(window, black, (x2, y1, 100, 120))
     if no_small_dogs_player_1 > 0:
-        textsurface = font.render(f"{no_small_dogs_player_1}", True, WHITE)
+        textsurface = font.render(f"{no_small_dogs_player_1}", True, white)
         window.blit(textsurface, (x1 + 10, y1 + 10))
         Image(x1 + 35, y1 + 10, smalldog, 50, 50).draw(window)
     if no_small_dogs_player_2 > 0:
-        textsurface = font.render(f"{no_small_dogs_player_2}", True, WHITE)
+        textsurface = font.render(f"{no_small_dogs_player_2}", True, white)
         window.blit(textsurface, (x2 + 10, y1 + 10))
         Image(x2 + 35, y1 + 10, smalldog, 50, 50).draw(window)
     if no_big_dogs_player_1 > 0:
-        textsurface = font.render(f"{no_big_dogs_player_1}", True, WHITE)
+        textsurface = font.render(f"{no_big_dogs_player_1}", True, white)
         window.blit(textsurface, (x1 + 10, y1 + 70))
         Image(x1 + 35, y1 + 70, bigdog, 50, 50).draw(window)
     if no_big_dogs_player_2 > 0:
-        textsurface = font.render(f"{no_big_dogs_player_2}", True, WHITE)
+        textsurface = font.render(f"{no_big_dogs_player_2}", True, white)
         window.blit(textsurface, (x2 + 10, y1 + 70))
         Image(x2 + 35, y1 + 70, bigdog, 50, 50).draw(window)
 
@@ -123,7 +117,10 @@ def update_board(
             cell_size + 5,
         )
 
-        number_destination = (black_marking_square[0] + cell_size * 3 / 5, black_marking_square[1] + cell_size * 3 / 4)
+        number_destination = (
+            black_marking_square[0] + cell_size * 3 / 5,
+            black_marking_square[1] + cell_size * 3 / 4,
+        )
 
         # Adding new animals
         if no_animals_before < no_animals_now:
@@ -136,7 +133,7 @@ def update_board(
             if no_animals_before % 2 == 1 and no_animals_before < 10 - animal.value * 2:
                 draw_animal(
                     window,
-                    BLUE,
+                    blue,
                     animal_board_coordinates[player_no][animal][
                         (no_animals_before - 1) // 2
                     ][0],
@@ -154,7 +151,7 @@ def update_board(
             ):
                 draw_animal(
                     window,
-                    BLUE,
+                    blue,
                     animal_board_coordinates[player_no][animal][i // 2][0],
                     animal_board_coordinates[player_no][animal][i // 2][1],
                     cell_size,
@@ -165,7 +162,7 @@ def update_board(
             if no_animals_now % 2 == 1 and no_animals_now < 10 - animal.value * 2:
                 draw_animal(
                     window,
-                    BLUE,
+                    blue,
                     animal_board_coordinates[player_no][animal][no_animals_now // 2][0],
                     animal_board_coordinates[player_no][animal][no_animals_now // 2][1],
                     cell_size,
@@ -175,16 +172,12 @@ def update_board(
                 )
             # Drawing additional animals
             if no_animals_now > 10 - animal.value * 2:
-                py.draw.rect(
-                    window,
-                    BLACK,
-                    black_marking_square
-                )
+                py.draw.rect(window, black, black_marking_square)
                 draw_additional_animals(
                     window,
-                    BLUE,
-                    BLUE2,
-                    BLUE3,
+                    blue,
+                    blue2,
+                    blue3,
                     animal_board_coordinates[player_no][animal][
                         len(animal_board_coordinates[player_no][animal]) - 1
                     ][2],
@@ -198,15 +191,12 @@ def update_board(
                     animal_board_coordinates[player_no][animal][
                         len(animal_board_coordinates[player_no][animal]) - 1
                     ][4],
-                    cell_size
+                    cell_size,
                 )
                 font2 = py.font.Font("Fonts/BRLNSDB.ttf", 32)
                 text = "+" + str(no_animals_now - (10 - animal.value * 2))
-                text_surface = font2.render(text, True, WHITE)
-                window.blit(
-                    text_surface,
-                    number_destination
-                )
+                text_surface = font2.render(text, True, white)
+                window.blit(text_surface, number_destination)
         # Removing some animals
         elif no_animals_now < no_animals_before:
             print("Removing animals which values are ", animal.value)
@@ -218,8 +208,8 @@ def update_board(
                 print(no_animals_now, no_animals_before, i, i // 2)
                 draw_empty_circles(
                     window,
-                    BLUE,
-                    BLACK,
+                    blue,
+                    black,
                     animal_board_coordinates[player_no][animal][i // 2][0],
                     animal_board_coordinates[player_no][animal][i // 2][1],
                     cell_size,
@@ -229,7 +219,7 @@ def update_board(
                 print("TU: 0")
                 draw_animal(
                     window,
-                    BLUE,
+                    blue,
                     animal_board_coordinates[player_no][animal][0][0],
                     animal_board_coordinates[player_no][animal][0][1],
                     cell_size,
@@ -241,7 +231,7 @@ def update_board(
                 print("TU: 1")
                 draw_animal(
                     window,
-                    BLUE,
+                    blue,
                     animal_board_coordinates[player_no][animal][no_animals_now // 2][0],
                     animal_board_coordinates[player_no][animal][no_animals_now // 2][1],
                     cell_size,
@@ -253,7 +243,7 @@ def update_board(
                 print("TU: 2")
                 draw_animal(
                     window,
-                    BLUE,
+                    blue,
                     animal_board_coordinates[player_no][animal][
                         no_animals_now // 2 - 1
                     ][0],
@@ -265,41 +255,38 @@ def update_board(
                     animal.value,
                     255,
                 )
-            py.draw.rect(window, BLACK, black_marking_square)
+            py.draw.rect(window, black, black_marking_square)
             if no_animals_now <= 10 - animal.value * 2 < no_animals_before:
                 print("AAAAAAAA")
                 # Removing additional animals
-                #py.draw.rect(window, BLACK, black_marking_square)
+                # py.draw.rect(window, BLACK, black_marking_square)
             elif no_animals_now > 10 - animal.value * 2:
                 print("TUUUUUUU")
                 # Changing value of additional animals printed number
                 draw_additional_animals(
                     window,
-                    BLUE,
-                    BLUE2,
-                    BLUE3,
+                    blue,
+                    blue2,
+                    blue3,
                     animal_board_coordinates[player_no][animal][
                         len(animal_board_coordinates[player_no][animal]) - 1
-                        ][2],
+                    ][2],
                     animal_board_coordinates[player_no][animal][
                         len(animal_board_coordinates[player_no][animal]) - 1
-                        ][3],
+                    ][3],
                     animal_board_coordinates[player_no][animal][
                         len(animal_board_coordinates[player_no][animal]) - 1
-                        ][1],
+                    ][1],
                     animal,
                     animal_board_coordinates[player_no][animal][
                         len(animal_board_coordinates[player_no][animal]) - 1
-                        ][4],
-                    cell_size
+                    ][4],
+                    cell_size,
                 )
                 font2 = py.font.Font("Fonts/BRLNSDB.ttf", 32)
                 text = "+" + str(no_animals_now - (10 - animal.value * 2))
-                text_surface = font2.render(text, True, WHITE)
-                window.blit(
-                    text_surface,
-                    number_destination
-                )
+                text_surface = font2.render(text, True, white)
+                window.blit(text_surface, number_destination)
     print(animals_now)
     py.display.flip()
 
@@ -312,7 +299,7 @@ def mark_animals_for_exchange(
     last_animal: int,
     animal_board_coordinates: list[dict],
     cell_size: float,
-    color: tuple[int, int, int] = BLUE3,
+    color: tuple[int, int, int] = blue3,
 ) -> None:
     player_no = player.id
     print(animal, player.animals)
@@ -320,7 +307,6 @@ def mark_animals_for_exchange(
         min(first_animal, last_animal), max(first_animal + 1, last_animal + 1)
     ):
         print(player_no, animal, i)
-        animal_to_draw = None
         if i * 2 + 1 == player.animals[animal]:
             animal_to_draw = animal
         else:
@@ -355,5 +341,5 @@ def unmark_animals_for_exchange(
         no_exchanged_animals,
         animal_board_coordinates,
         cell_size,
-        BLUE,
+        blue,
     )

@@ -9,27 +9,30 @@ from board_initializer import BoardInitializer
 from exchange_mechanism import ExchangeMechanism
 from interaction_actions import check_win, get_clicked_circle, is_mouse_over
 from on_change_drawings import draw_dogs, rotate_animation, update_board
-from players_data import Player
-from util import Image
+from players_data import Player, create_players
+from util import Bank, Image, black, white
 
 
 class GameLogic:
     def __init__(
-        self, window: Surface, board: BoardInitializer, players: list[Player], starting_player_number: int = 0
+        self,
+        window: Surface,
+        board: BoardInitializer,
+        players: list[Player],
+        starting_player_number: int = 0,
     ) -> None:
         self.window = window
         self.board = board
         self.players = players
         self.player_turn = starting_player_number
-        self.exc_mech = ExchangeMechanism(window, board)
+        self.bank = Bank()
+        self.exc_mech = ExchangeMechanism(window, board, self.bank)
         self.clock = py.time.Clock()
         self.win = [False for _ in range(len(players))]
 
     def check(self, event):
 
         someone_won = False
-        black = (0, 0, 0)
-        white = (255, 255, 255)
         self.clock.tick(50)
         start_rotation_fps = 100
 
@@ -86,7 +89,7 @@ class GameLogic:
                 animals_before = deepcopy(self.players[self.player_turn].animals)
 
                 res1, res2 = self.players[self.player_turn].add_animals(
-                    drawn_animals[0], drawn_animals[1]
+                    drawn_animals[0], drawn_animals[1], self.bank
                 )
 
                 py.draw.rect(self.window, black, cube_result_marking_rect)
@@ -159,7 +162,7 @@ class GameLogic:
             if is_mouse_over(self.board.small_dog_button):
                 # Small dog icon clicked
                 animals_before = deepcopy(self.players[self.player_turn].animals)
-                result = self.players[self.player_turn].buy_small_dog()
+                result = self.players[self.player_turn].buy_small_dog(self.bank)
                 if result == -1:
                     message = "You don't have enough sheep to buy a small dog!"
                 elif result == -2:
@@ -195,7 +198,7 @@ class GameLogic:
             if is_mouse_over(self.board.big_dog_button):
                 # Big dog icon clicked
                 animals_before = deepcopy(self.players[self.player_turn].animals)
-                result = self.players[self.player_turn].buy_big_dog()
+                result = self.players[self.player_turn].buy_big_dog(self.bank)
                 if result == -1:
                     message = "You don't have enough cows to buy a big dog!"
                 elif result == -2:
@@ -246,3 +249,15 @@ class GameLogic:
         elif self.player_turn == 1:
             py.draw.rect(self.window, black, (30, 370, 70, 70))
             Image(1400, 370, blue_arrow, 70, 70).draw(self.window)
+
+    # end def
+
+    def restart_game(self, board: BoardInitializer, starting_player_number: int):
+        self.board = board
+        self.players = create_players(board.no_players)
+        self.player_turn = starting_player_number
+        self.win = [False for _ in range(board.no_players)]
+        self.bank.reset_bank()
+        self.exc_mech.bank = self.bank
+
+    # end def

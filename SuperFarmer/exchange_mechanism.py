@@ -8,12 +8,12 @@ from interaction_actions import check_win
 from on_change_drawings import (mark_animals_for_exchange,
                                 unmark_animals_for_exchange, update_board)
 from players_data import Player
-from util import Animal
+from util import Animal, Bank, black, white
 
 
 class ExchangeMechanism:
     def __init__(
-        self, window: Surface, board: BoardInitializer, no_players: int = 2
+        self, window: Surface, board: BoardInitializer, bank: Bank, no_players: int = 2
     ) -> None:
         """
         First value of for_exchange list represents an animal to exchange, second is equivalent to the number
@@ -24,6 +24,7 @@ class ExchangeMechanism:
         self.no_players = no_players
         self.for_exchange = [[None, None, None] for _ in range(no_players)]
         self.start = [-1 for _ in range(no_players)]
+        self.bank = bank
 
     # end def
 
@@ -36,8 +37,6 @@ class ExchangeMechanism:
         win: list[bool],
         info_rect: tuple[float, float, float, float],
         font: py.font.Font,
-        white: tuple[int, int, int] = (255, 255, 255),
-        black: tuple[int, int, int] = (0, 0, 0),
     ) -> None:
         """
         Before clicking cube button we can exchange animals using this function.
@@ -165,6 +164,7 @@ class ExchangeMechanism:
                     self.for_exchange[player_turn][0],
                     self.for_exchange[player_turn][1],
                     self.for_exchange[player_turn][2],
+                    self.bank,
                 )
 
                 if exchange_result < 0:

@@ -3,10 +3,11 @@ from pygame import Surface
 
 from board_initializer import BoardInitializer
 from interaction_actions import is_mouse_over
-from util import Image
+from menu_initializer import MenuInitializer
+from util import Image, black, dark_green, dark_grey, green, white
 
 
-def on_hover(
+def on_hover_game(
     window: Surface,
     board: BoardInitializer,
     player_turn: int,
@@ -18,8 +19,6 @@ def on_hover(
         (93, 190, 194),
         (38, 125, 128),
     ],
-    black: tuple[int, int, int] = (0, 0, 0),
-    dark_grey: tuple[int, int, int] = (59, 59, 59),
 ) -> None:
     colors = [[] for _ in range(no_players)]
     for i in range(no_players):
@@ -30,9 +29,9 @@ def on_hover(
     big_dog = py.image.load("Images/bigdog.png")
 
     cube_button_text_surface = (
-        (board.font.render("Roll the dices", True, (255, 255, 255)))
+        (board.font.render("Roll the dices", True, white))
         if cube_button_font is None
-        else cube_button_font.render("Roll the dices", True, (255, 255, 255))
+        else cube_button_font.render("Roll the dices", True, white)
     )
 
     rect_behind_small_dog_button = (
@@ -98,3 +97,21 @@ def on_hover(
             board.big_dog_button[2],
             board.big_dog_button[3],
         ).draw(window)
+
+
+# end def
+
+
+def on_hover_menu(window: Surface, menu: MenuInitializer):
+    start_text_surface = menu.font.render("Start game", True, white)
+
+    if is_mouse_over(menu.start_button):
+        py.draw.rect(window, dark_green, menu.start_button)
+        window.blit(
+            start_text_surface, (menu.start_button[0] + 10, menu.start_button[1] + 10)
+        )
+    else:
+        py.draw.rect(window, green, menu.start_button)
+        window.blit(
+            start_text_surface, (menu.start_button[0] + 10, menu.start_button[1] + 10)
+        )

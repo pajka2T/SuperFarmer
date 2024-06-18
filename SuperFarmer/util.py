@@ -19,6 +19,36 @@ class Image:
         window.blit(self.image, self.rect)
 
 
+class Bank:
+    def __init__(self) -> None:
+        self.animals = {
+            Animal.RABBIT: 60,
+            Animal.SHEEP: 24,
+            Animal.PIG: 20,
+            Animal.COW: 12,
+            Animal.HORSE: 6,
+        }
+        self.dogs = {
+            Defence.SMALLDOG: 4,
+            Defence.BIGDOG: 2,
+        }
+
+    # end def
+
+    def reset_bank(self) -> None:
+        self.animals = {
+            Animal.RABBIT: 60,
+            Animal.SHEEP: 24,
+            Animal.PIG: 20,
+            Animal.COW: 12,
+            Animal.HORSE: 6,
+        }
+        self.dogs = {
+            Defence.SMALLDOG: 4,
+            Defence.BIGDOG: 2,
+        }
+
+
 class Animal(Enum):
     RABBIT = 0
     SHEEP = 1
@@ -45,16 +75,6 @@ class Predators(Enum):
 
 # end enum
 
-
-bank = {
-    Animal.RABBIT: 60,
-    Animal.SHEEP: 24,
-    Animal.PIG: 20,
-    Animal.COW: 12,
-    Animal.HORSE: 6,
-    Defence.SMALLDOG: 4,
-    Defence.BIGDOG: 2,
-}
 
 exchange_cost = {
     Animal.RABBIT: {Animal.SHEEP: 6, Animal.PIG: 12, Animal.COW: 36, Animal.HORSE: 72},
@@ -93,6 +113,17 @@ animals2 = [
     Animal.COW,
     Predators.WOLF,
 ]
+
+blue = (52, 229, 235)
+white = (255, 255, 255)
+red = (255, 0, 0)
+black = (0, 0, 0)
+dark_grey = (59, 59, 59)
+green = (0, 255, 0)
+dark_green = (0, 125, 0)
+blue2 = (93, 190, 194)
+blue3 = (38, 125, 128)
+light_yellow = (238, 255, 125)
 
 
 def rand_animals() -> tuple[Animal, Animal]:
@@ -166,3 +197,6 @@ def convert_animal_to_dice_img(animal: Animal, k: int) -> Surface:
     if animal.value == Predators.WOLF.value and k == 1:
         img = py.image.load("Images/wolfdice.png")
     return img
+
+
+# end def

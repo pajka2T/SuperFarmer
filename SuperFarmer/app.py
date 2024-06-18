@@ -3,14 +3,15 @@ from pygame.locals import *
 
 from board_initializer import BoardInitializer
 from game_logic import GameLogic
-from hover_drawings import on_hover
+from hover_drawings import on_hover_game, on_hover_menu
 from interaction_actions import draw_alert, is_mouse_over
-from players_data import create_users
+from menu_initializer import MenuInitializer
+from players_data import create_players
 
 
 class App:
     def __init__(self, no_players: int = 2) -> None:
-        self.players = create_users(no_players)
+        self.players = create_players(no_players)
         App.running = True
 
     def play(self) -> None:
@@ -22,8 +23,13 @@ class App:
 
         WINDOW = py.display.set_mode(WINSIZE)
         py.display.set_caption("Super Farmer")
-        board = BoardInitializer()
-        board.create_board(WINDOW)
+
+        font = py.font.Font("Fonts/BRLNSDB.ttf", 28)
+
+        menu = MenuInitializer(font)
+
+        board = BoardInitializer(font)
+
         py.display.flip()
 
         # # Animacja farmera
@@ -70,14 +76,24 @@ class App:
         # For alert
         show_alert = False
         ok_button = None
-        game_end = False
+        game_end = True
+        menu_shown = False
 
-        game_logic = GameLogic(WINDOW, board, self.players)
+        starting_player = 0
+
+        game_logic = GameLogic(WINDOW, board, self.players, starting_player)
 
         while App.running:
-            if not game_end:
-                on_hover(WINDOW, board, game_logic.player_turn)
+            if game_end and not menu_shown:
+                menu.create_menu(WINDOW)
+                menu_shown = True
+            elif game_end:
+                on_hover_menu(WINDOW, menu)
                 py.display.flip()
+            elif not game_end:
+                on_hover_game(WINDOW, board, game_logic.player_turn)
+                py.display.flip()
+
             for event in py.event.get():
                 if event.type == QUIT:
                     App.running = False
@@ -85,26 +101,39 @@ class App:
                     if event.key == K_ESCAPE:
                         App.running = False
                 if event.type == MOUSEBUTTONDOWN:
-                    if (
-                        show_alert
-                        and ok_button is not None
-                        and is_mouse_over(ok_button)
-                    ):
-                        show_alert = False
-                        print(show_alert)
-                if not game_end and game_logic.check(event):
+                    # if (
+                    #     show_alert
+                    #     and ok_button is not None
+                    #     and is_mouse_over(ok_button)
+                    # ):
+                    #     show_alert = False
+                    #     print(show_alert)
+                    if menu_shown:
+                        if is_mouse_over(menu.start_button):
+                            menu_shown = False
+                            game_end = False
+                            board.create_board(WINDOW)
+                            starting_player = (starting_player + 1) % board.no_players
+                            print("STARTING PLAYER: ", starting_player)
+                            game_logic.restart_game(board, starting_player)
+                            print(game_logic.bank.animals)
+                            print(game_logic.bank.dogs)
+                if not game_end and not menu_shown and game_logic.check(event):
                     print("WIN AAA")
                     game_end = True
-                    ok_button = draw_alert(WINDOW,
-                                           "Player " + str(game_logic.win.index(True)) + " won! Congrats!",
-                                           board.font
-                                           )
+                    ok_button = draw_alert(
+                        WINDOW,
+                        "Player " + str(game_logic.win.index(True)) + " won! Congrats!",
+                        board.font,
+                    )
                     py.display.flip()
+                    py.time.delay(2000)
+                    break
             py.display.flip()
         draw_alert(
             WINDOW,
             "Player " + str(game_logic.win.index(True)) + " won! Congrats!",
-            board.font
+            board.font,
         )
         py.display.flip()
         py.time.delay(5)

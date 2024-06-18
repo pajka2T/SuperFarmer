@@ -5,7 +5,7 @@ from pygame import Surface
 from pygame.font import Font
 
 from players_data import Player
-from util import Animal
+from util import Animal, black, green, white
 
 
 def is_mouse_over(rect: tuple[float, float, float, float]) -> bool:
@@ -73,9 +73,6 @@ def draw_alert(
     window: Surface,
     message: str,
     font: Font,
-    green: tuple[int, int, int] = (0, 255, 0),
-    white: tuple[int, int, int] = (255, 255, 255),
-    black: tuple[int, int, int] = (0, 0, 0),
 ) -> tuple[float, float, float, float]:
     alert_rect = (0.3 * window.get_width(), 0.3 * window.get_height(), 500, 300)
     py.draw.rect(window, white, alert_rect)
