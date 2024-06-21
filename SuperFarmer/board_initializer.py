@@ -407,14 +407,8 @@ class BoardInitializer:
         :return: (None) Only draws.
         """
 
-        bunny_margin_side = (
-            self.animal_board_coordinates[player_id][Animal.RABBIT][0][0]
-            - self.cell_size / 2,
-        )
-        board_margin_top = (
-            self.animal_board_coordinates[player_id][Animal.RABBIT][0][1]
-            - self.cell_size / 2,
-        )
+        bunny_margin_side = self.animal_board_coordinates[player_id][Animal.RABBIT][0][0] - self.cell_size / 2
+        board_margin_top = self.animal_board_coordinates[player_id][Animal.RABBIT][0][1] - self.cell_size / 2
 
         py.draw.polygon(
             window,
