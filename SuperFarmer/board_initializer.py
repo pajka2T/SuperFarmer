@@ -1,27 +1,39 @@
 import math
 
+from on_change_drawings import update_board
+from players_data import Player
 from simple_drawings import *
-from util import blue, red, white
+from util import black, blue, empty_dict, grass_color, red, white
 
 
 class BoardInitializer:
     """
-    Class responsible for creating and storing all board data.
+    Class responsible for creating and storing all board data, especially positions of its elements.
     """
+
     def __init__(self, font: py.font.Font, no_players: int = 2):
+        """
+        Initializes game board.
+        :param font: Specifies font used to show messages throughout the game.
+        :param no_players: Number of players playing.
+        """
         self.no_players = no_players
         self.animal_board_coordinates = None
         self.cell_size = None
+        self.player_board_width = None
         self.cube_button = None
         self.small_dog_button = None
         self.big_dog_button = None
         self.font = font
+        """
+        All these attributes are created in create_board method and are used by different modules and classes to work properly.
+        """
 
     def create_board(self, window: Surface) -> None:
         """
         Creates new board for game containing everything required to play - players' boards, buttons, images.
-        :param window: Surface
-        :return: None
+        :param window: Application window where the board will be drawn.
+        :return: (None): Only draws board.
         """
         window.fill((0, 0, 0, 0))
 
@@ -92,34 +104,18 @@ class BoardInitializer:
             redfarmer_height / 3,
         ).draw(window)
 
-        self.__draw_dogs_shop(
-            window, self.small_dog_button, self.big_dog_button, white, blue
-        )
+        self.__draw_dogs_shop(window, self.small_dog_button, self.big_dog_button)
 
-        player_board_width = self.cell_size * 5 + BETWEEN_CELLS * 4
+        self.player_board_width = self.cell_size * 5 + BETWEEN_CELLS * 4
 
         for i in range(8):
             Image(
-                BUNNY_MARGIN_SIDE + player_board_width / 8 * i,
-                BOARD_MARGIN_TOP - player_board_width / 12,
+                BUNNY_MARGIN_SIDE + self.player_board_width / 8 * i,
+                BOARD_MARGIN_TOP - self.player_board_width / 12,
                 fence,
-                player_board_width / 8,
-                player_board_width / 12,
+                self.player_board_width / 8,
+                self.player_board_width / 12,
             ).draw(window)
-
-            py.draw.polygon(
-                window,
-                (255, 255, 255),
-                [
-                    (BUNNY_MARGIN_SIDE, BOARD_MARGIN_TOP),
-                    (BUNNY_MARGIN_SIDE + player_board_width, BOARD_MARGIN_TOP),
-                    (
-                        BUNNY_MARGIN_SIDE + player_board_width / 2,
-                        BOARD_MARGIN_TOP + self.cell_size * 5,
-                    ),
-                ],
-                0,
-            )
 
         self.__create_coordinates(
             [BUNNY_MARGIN_SIDE, BUNNY_MARGIN_SIDE_TWO],
@@ -127,7 +123,8 @@ class BoardInitializer:
             BOARD_MARGIN_TOP,
         )
 
-        self.__draw_start_animals(window, blue)
+        for player_number in range(self.no_players):
+            self.draw_start_animals(window, player_number)
 
         print(self.animal_board_coordinates)
 
@@ -149,6 +146,13 @@ class BoardInitializer:
         between_cells: float,
         board_margin_top: float,
     ) -> None:
+        """
+        Private method for calculating values of animals coordinates on the board
+        :param bunny_margin_sides (float): Represents the value of player's board's left edge.
+        :param between_cells (float): Represents the value of space between animals cells.
+        :param board_margin_top (float): Represents the value of top margin of the board.
+        :return: (None): It saves coordinates to board attribue.
+        """
         animal_board_coordinates = [
             {
                 Animal.RABBIT: [],
@@ -248,48 +252,83 @@ class BoardInitializer:
 
     # end def
 
-    def __draw_start_animals(
+    def draw_start_animals(
         self,
         window: Surface,
-        color: tuple[int, int, int],
+        player_id: int,
+        color: tuple[int, int, int] = blue,
         size: float = 10,
-        black: tuple[int, int, int] = (0, 0, 0),
     ) -> None:
-        for player in range(self.no_players):
-            for animal, fields in self.animal_board_coordinates[player].items():
-                print(animal, fields)
-                for field_number in range(len(fields) - 1):
-                    if field_number == 0:
-                        draw_animal(
-                            window,
-                            color,
-                            fields[field_number][0],
-                            fields[field_number][1],
-                            self.cell_size,
-                            size,
-                            animal,
-                            128,
-                        )
-                    else:
-                        draw_empty_circles(
-                            window,
-                            color,
-                            black,
-                            fields[field_number][0],
-                            fields[field_number][1],
-                            self.cell_size,
-                        )
+        """
+        Draws starting player board with background, where there are no animals.
+        :param window: Application window where the board will be drawn.
+        :param player_id: Player's identification.
+        :param color: Color of animals circles.
+        :param size: Size of animal in the circle.
+        :return: (None) Only draws animals.
+        """
+
+        self.__polygon(window, player_id)
+
+        for animal, fields in self.animal_board_coordinates[player_id].items():
+            for field_number in range(len(fields) - 1):
+                if field_number == 0:
+                    draw_animal(
+                        window,
+                        color,
+                        fields[field_number][0],
+                        fields[field_number][1],
+                        self.cell_size,
+                        size,
+                        animal,
+                        128,
+                    )
+                else:
+                    draw_empty_circles(
+                        window,
+                        color,
+                        black,
+                        fields[field_number][0],
+                        fields[field_number][1],
+                        self.cell_size,
+                    )
 
     # end def
+
+    def draw_current_animals(
+        self, window: Surface, player: Player, current_animals: dict[Animal, int]
+    ) -> None:
+        """
+        Draws board with current status of player's animals, with background.
+        :param window: Application window where the board will be drawn.
+        :param player: Player which animals will be drawn.
+        :param current_animals: Animals now.
+        :return: (None) Only draws.
+        """
+
+        self.draw_start_animals(window, player.id)
+        update_board(
+            window,
+            player,
+            empty_dict,
+            current_animals,
+            self.animal_board_coordinates,
+            self.cell_size,
+        )
 
     def __draw_dogs_shop(
         self,
         window: Surface,
         small_dog_button: tuple[float, float, float, float],
         big_dog_button: tuple[float, float, float, float],
-        white: tuple[int, int, int],
-        blue: tuple[int, int, int],
     ) -> None:
+        """
+        Draws dog shop in the top-right corner of the application window.
+        :param window: Application window where the board will be drawn.
+        :param small_dog_button: Button responsible for buying small dogs.
+        :param big_dog_button: Button responsible for buying big dogs.
+        :return: (None) Only draws
+        """
         small_dog = py.image.load("Images/smalldog.png")
         Image(
             small_dog_button[0],
@@ -353,3 +392,45 @@ class BoardInitializer:
         )
 
     # end def
+
+    def __polygon(
+        self,
+        window: Surface,
+        player_id: int,
+        color: tuple[int, int, int] = grass_color,
+    ) -> None:
+        """
+        Function drawing polygon which is a background to player's board.
+        :param window: Button responsible for buying small dogs.
+        :param player_id: Player's identification.
+        :param color: Color of polygon
+        :return: (None) Only draws.
+        """
+
+        bunny_margin_side = (
+            self.animal_board_coordinates[player_id][Animal.RABBIT][0][0]
+            - self.cell_size / 2,
+        )
+        board_margin_top = (
+            self.animal_board_coordinates[player_id][Animal.RABBIT][0][1]
+            - self.cell_size / 2,
+        )
+
+        py.draw.polygon(
+            window,
+            color,
+            [
+                (bunny_margin_side, board_margin_top),
+                (bunny_margin_side + self.player_board_width, board_margin_top),
+                (
+                    bunny_margin_side + self.player_board_width / 2,
+                    board_margin_top + self.cell_size * 5,
+                ),
+            ],
+            0,
+        )
+
+    # end def
+
+
+# end class

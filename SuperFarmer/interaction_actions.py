@@ -5,14 +5,14 @@ from pygame import Surface
 from pygame.font import Font
 
 from players_data import Player
-from util import Animal, black, green, white
+from util import Animal, grass_color, white
 
 
 def is_mouse_over(rect: tuple[float, float, float, float]) -> bool:
     """
     Function checking whether mouse cursor is hovering over specified rectangle.
-    :param rect: tuple[float, float, float, float]
-    :return:
+    :param rect: Checked rectangle.
+    :return: (bool) True if mouse is over specified rectangle or False otherwise.
     """
     mouse_x, mouse_y = py.mouse.get_pos()
     return (
@@ -32,12 +32,14 @@ def get_clicked_circle(
 ) -> (int, int):
     """
     Function returning coordinates of animal's circle clicked by the player.
-    :param mouse_x:
-    :param mouse_y:
-    :param player_turn:
-    :param animal_board_coordinates:
-    :param cell_size:
-    :return:
+    :param mouse_x: Horizontal value of mouse position.
+    :param mouse_y: Vertical value of mouse position.
+    :param player_turn: Current player turn.
+    :param animal_board_coordinates: Coordinates of animals circles on the board.
+    :param cell_size: Size of the animals circle.
+    :return: (int, int) Coordinates of clicked circle.
+            They are positive, if clicked circle belongs to player which turn is now,
+            and negative (exactly -1) otherwise.
     """
     a = -1
     b = -1
@@ -71,10 +73,10 @@ def get_clicked_circle(
 
 def check_win(player: Player, win_list: list[bool]) -> bool:
     """
-    Checks whether someone has won (has collected at least one animal of each type).
-    :param player:
-    :param win_list:
-    :return:
+    Checks whether specified player has won (has collected at least one animal of each type).
+    :param player: Checked player.
+    :param win_list: List of winning booleans.
+    :return: (bool) True when player won or False otherwise.
     """
     for animal, count in player.animals.items():
         if count <= 0:
@@ -88,22 +90,17 @@ def check_win(player: Player, win_list: list[bool]) -> bool:
 
 
 def draw_alert(
-    window: Surface,
-    message: str,
-    font: Font,
-    info_rect: tuple[float, float, float]
+    window: Surface, message: str, font: Font, info_rect: tuple[float, float, float]
 ) -> None:
     """
     Function draws winning information.
-    :param info_rect:
-    :param window:
-    :param message:
-    :param font:
-    :return:
+    :param info_rect: Rectangle where information are going to be drawn.
+    :param window: Application window where the board will be drawn.
+    :param message: Message which is going to be shown.
+    :param font: Font of a message.
+    :return: (None) Only draws message.
     """
-    alert_rect = (0.3 * window.get_width(), 0.3 * window.get_height(), 500, 300)
-
-    win_text_surface = font.render(message, True, white)
+    win_text_surface = font.render(message, True, grass_color)
     window.blit(win_text_surface, (info_rect[0] + 20, info_rect[1] + 10))
     py.display.flip()
 

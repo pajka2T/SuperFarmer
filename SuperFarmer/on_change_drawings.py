@@ -21,6 +21,19 @@ def rotate_animation(
     y: float,
     diff: float,
 ) -> None:
+    """
+    Function responsible for rotational animation of dices.
+    :param window: Application window where the board will be drawn.
+    :param image: Blue dice image.
+    :param image2: Orange dice image.
+    :param color: Color of marking rectangle.
+    :param clock: Clock responsible for animating.
+    :param start_fps: Frames per second.
+    :param x: Horizontal position of blue dice.
+    :param y: Vertical position of blue dice.
+    :param diff: Difference between orange dice and blue dice horizontal positions.
+    :return: (None) Only animates.
+    """
     width = image.get_width() / 9
     height = image.get_height() / 9
     for i in range(80, -1, -1):
@@ -35,10 +48,6 @@ def rotate_animation(
         else:
             clock.tick(15)
 
-        # a = abs(width*math.sin(4.5*(10-i)))
-        # b = abs(width*math.cos(4.5*(10-i)))
-        # x2 = x-(a+b-width)/2
-        # y2 = y-(a+b-height)/2
         py.draw.rect(
             window, color, (x - width / 2, y - height / 2, width * 2 + 2, height + 1), 0
         )
@@ -59,6 +68,9 @@ def rotate_animation(
         py.display.update()
 
 
+# end def
+
+
 def draw_dogs(
     window: Surface,
     x1: float,
@@ -73,17 +85,17 @@ def draw_dogs(
 ) -> None:
     """
     Function drawing actual number of dogs which every player has, when player buy or lose a dog.
-    :param window:
-    :param x1:
-    :param x2:
-    :param y1:
-    :param smalldog:
-    :param bigdog:
-    :param no_small_dogs_player_1:
-    :param no_big_dogs_player_1:
-    :param no_small_dogs_player_2:
-    :param no_big_dogs_player_2:
-    :return:
+    :param window: Application window where the board will be drawn.
+    :param x1: Horizontal position used to define position of player's one dog images.
+    :param x2: Horizontal position used to define position of player's two dog images.
+    :param y1: Verical position used to define position of players dog images.
+    :param smalldog: Image of small dog.
+    :param bigdog: Image of big dog.
+    :param no_small_dogs_player_1: Number of small dogs which player one has.
+    :param no_big_dogs_player_1: Number of big dogs which player one has.
+    :param no_small_dogs_player_2: Number of small dogs which player two has.
+    :param no_big_dogs_player_2: Number of big dogs which player two has.
+    :return: (None) Only animates dices.
     """
     font = py.font.Font("Fonts/BRLNSDB.ttf", 50)
     py.draw.rect(window, black, (x1, y1, 100, 120))
@@ -106,6 +118,9 @@ def draw_dogs(
         Image(x2 + 35, y1 + 70, bigdog, 50, 50).draw(window)
 
 
+# end def
+
+
 def update_board(
     window: Surface,
     player: Player,
@@ -116,13 +131,13 @@ def update_board(
 ) -> None:
     """
     Function which updates the board when there is a change in player's animals dictionary.
-    :param window:
-    :param player:
-    :param animals_before: Dict[Animal, int] - animals which player had before the change
-    :param animals_now: Dict[Animal, int] - animals which player has after the change
-    :param animal_board_coordinates:
-    :param cell_size:
-    :return:
+    :param window: Application window where the board will be drawn.
+    :param player: Player whose animals will be drawn.
+    :param animals_before: Animals which player had before the change
+    :param animals_now: Animals which player has after the change
+    :param animal_board_coordinates: Coordinates of animals circles.
+    :param cell_size: Size of animals circle.
+    :return: (None) Only draws.
     """
     player_no = player.id
     for animal in animals_now:
@@ -293,6 +308,9 @@ def update_board(
     py.display.flip()
 
 
+# end def
+
+
 def mark_animals_for_exchange(
     window: Surface,
     player: Player,
@@ -305,15 +323,15 @@ def mark_animals_for_exchange(
 ) -> None:
     """
     Function marking animals which are going to be exchanged.
-    :param window:
-    :param player:
-    :param animal:
-    :param first_animal:
-    :param last_animal:
-    :param animal_board_coordinates:
-    :param cell_size:
-    :param color:
-    :return:
+    :param window: Application window where the board will be drawn.
+    :param player: Player whose animals will be marked.
+    :param animal: Type of animal to be marked.
+    :param first_animal: Number of first animal to be unmerked.
+    :param last_animal: Number of first animal to be unmarked.
+    :param animal_board_coordinates: Coordinates of animals circles.
+    :param cell_size: Size of animals circle.
+    :param color: Color of marking the circle.
+    :return: (None) Only marks animals circles.
     """
     player_no = player.id
     print(animal, player.animals)
@@ -338,6 +356,9 @@ def mark_animals_for_exchange(
     py.display.flip()
 
 
+# end def
+
+
 def unmark_animals_for_exchange(
     window: Surface,
     player: Player,
@@ -349,14 +370,14 @@ def unmark_animals_for_exchange(
 ):
     """
     Function unmarking animals which were supposed to be exchanged, but the exchanged was stopped.
-    :param window:
-    :param player:
-    :param animal:
-    :param first_animal:
-    :param no_exchanged_animals:
-    :param animal_board_coordinates:
-    :param cell_size:
-    :return:
+    :param window: Application window where the board will be drawn.
+    :param player: Player whose animals will be unmarked.
+    :param animal: Type of animal to be unmarked.
+    :param first_animal: Number of first animal to be unmarked.
+    :param no_exchanged_animals: Number of animals to be exchanged.
+    :param animal_board_coordinates: Coordinates of animals circles.
+    :param cell_size: Size of animals circle.
+    :return: (None) Only unmarks animals circles.
     """
     mark_animals_for_exchange(
         window,
@@ -368,3 +389,6 @@ def unmark_animals_for_exchange(
         cell_size,
         blue,
     )
+
+
+# end def

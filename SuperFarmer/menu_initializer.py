@@ -8,7 +8,12 @@ class MenuInitializer:
     """
     Class responsible for creating menu.
     """
+
     def __init__(self, font: py.font.Font) -> None:
+        """
+        Initializes menu.
+        :param font: Font in which menu will be drawn.
+        """
         self.start_button = None
         self.font = font
         self.start_button = None
@@ -16,8 +21,8 @@ class MenuInitializer:
     def create_menu(self, window: Surface) -> None:
         """
         Function creating menu
-        :param window:
-        :return:
+        :param window: Application window where the board will be drawn.
+        :return: (None) Only draws menu.
         """
         whole_menu = (
             window.get_width() / 4,
@@ -46,3 +51,8 @@ class MenuInitializer:
         )
 
         py.display.flip()
+
+    # end def
+
+
+# end class

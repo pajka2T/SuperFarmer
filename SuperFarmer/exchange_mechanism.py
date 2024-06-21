@@ -15,12 +15,16 @@ class ExchangeMechanism:
     """
     Class responsible for creating exchange mechanism.
     """
+
     def __init__(
         self, window: Surface, board: BoardInitializer, bank: Bank, no_players: int = 2
     ) -> None:
         """
-        First value of for_exchange list represents an animal to exchange, second is equivalent to the number
-        of these animals and third represents an animal which player wants to get after exchange.
+        Initializes exchange drawing mechanism.
+        :param window: Application window where the board will be drawn.
+        :param board: Game board.
+        :param bank: Bank of animals.
+        :param no_players: Number of players playing.
         """
         self.window = window
         self.board = board
@@ -28,6 +32,10 @@ class ExchangeMechanism:
         self.for_exchange = [[None, None, None] for _ in range(no_players)]
         self.start = [-1 for _ in range(no_players)]
         self.bank = bank
+        """
+        First value of for_exchange list represents an animal to exchange, second is equivalent to the number
+        of these animals and third represents an animal which player wants to get after exchange.
+        """
 
     # end def
 
@@ -42,7 +50,16 @@ class ExchangeMechanism:
         font: py.font.Font,
     ) -> None:
         """
-        Before clicking cube button we can exchange animals by clicking on them using this function.
+        Function responsible for exchanging animals and drawing result by clicking on animals circles.
+        We can use it before clicking cube button, so before player's turn.
+        :param a: Row of clicked circle.
+        :param b: Column of clicked circle.
+        :param players: List of players playing.
+        :param player_turn: Current turn.
+        :param win: List storing the data about winning the game.
+        :param info_rect: Rectangle where all the exchange algorithm messages will be shown.
+        :param font: Font with which the messages will be shown.
+        :return: (None) Only calculates and draws.
         """
 
         if (
@@ -245,8 +262,8 @@ class ExchangeMechanism:
     def reset_for_exchange(self, player: Player) -> None:
         """
         Resets for_exchange table when exchange is stopped and properly updates board drawing.
-        :param player: Player
-        :return: None
+        :param player: Player which for_exchange list should be set to None.
+        :return: (None) Only changes value of for_exchange list.
         """
         if not all(val is None for val in self.for_exchange[player.id]):
             update_board(
@@ -266,3 +283,8 @@ class ExchangeMechanism:
         for i in range(len(self.for_exchange)):
             for j in range(len(self.for_exchange[i])):
                 self.for_exchange[i][j] = None
+
+    # end def
+
+
+# end class

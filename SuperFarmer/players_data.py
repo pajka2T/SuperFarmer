@@ -5,11 +5,16 @@ class Player:
     """
     Class responsible for storing all player data.
     """
+
     def __init__(self, id: int) -> None:
+        """
+        Initializes the player object.
+        :param id: Player's identification number.
+        """
         self.id = id
         self.animals = {
-            Animal.RABBIT: 0,
-            Animal.SHEEP: 0,
+            Animal.RABBIT: 1,
+            Animal.SHEEP: 1,
             Animal.PIG: 0,
             Animal.COW: 0,
             Animal.HORSE: 0,
@@ -21,12 +26,11 @@ class Player:
     ) -> tuple[str, str]:
         """
         Function adding animals to the player bank.
-        :param animal1:
-        :param animal2:
-        :param bank:
-        :return:
+        :param animal1: Animal drawn on an orange dice.
+        :param animal2: Animal drawn on a blue dice
+        :param bank: Current bank of animals.
+        :return: Info whether there were no predators or there were some.
         """
-        print(animal1, animal2)
 
         if (
             isinstance(animal1, Animal)
@@ -93,8 +97,8 @@ class Player:
     def buy_small_dog(self, bank: Bank) -> int:
         """
         Function which allows player to buy a small dog.
-        :param bank:
-        :return:
+        :param bank: Bank of animals and dogs.
+        :return: Info about success - positive if player bought small dog successfully and negative otherwise.
         """
         if self.animals[Animal.SHEEP] < 1:
             return -1
@@ -109,9 +113,9 @@ class Player:
 
     def buy_big_dog(self, bank: Bank) -> int:
         """
-            Function which allows player to buy a big dog.
-            :param bank:
-            :return:
+        Function which allows player to buy a big dog.
+        :param bank: Bank of animals and dogs
+        :return: Info about success - positive if player bought big dog successfully and negative otherwise.
         """
         if self.animals[Animal.COW] < 1:
             return -1
@@ -133,11 +137,14 @@ class Player:
     ) -> int:
         """
         Function allowing player to exchange animals.
-        :param animal_from:
-        :param no_animals_to_exchange:
-        :param animal_to:
-        :param bank:
-        :return:
+        :param animal_from: Animal which is going to be exchanged.
+        :param no_animals_to_exchange: Number of animals which are going to be exchanged.
+        :param animal_to: Animal which will player will gain after a successful exchange.
+        :param bank: Bank of animals.
+        :return: (int) Negative integer value when player does not have required number of animals for exchange
+                and positive when it has:
+                    * 1 when animals where exchanged,
+                    * 2 when there are no animals left in the bank for exchange.
         """
         if not isinstance(animal_from, Animal) or not isinstance(animal_to, Animal):
             return -1
@@ -187,8 +194,8 @@ class Player:
 def create_players(n: int) -> list[Player]:
     """
     Function creating list of players.
-    :param n:
-    :return:
+    :param n: Number of players to be created.
+    :return: (list(Player)) List of created players.
     """
     players = []
     for i in range(0, n):

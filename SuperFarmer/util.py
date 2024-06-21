@@ -9,9 +9,18 @@ class Image:
     """
     Class responsible for creating and drawing images.
     """
+
     def __init__(
         self, x: float, y: float, image: Surface, width: float, height: float
     ) -> None:
+        """
+        Creates an image object.
+        :param x: Horizontal position of an image.
+        :param y: Vertical position of an image.
+        :param image: File converted to image using py.image.load function.
+        :param width: Expected width of image.
+        :param height: Expected height of an image.
+        """
         self.image = py.transform.scale(image, (width, height))
         self.rect = image.get_rect()
         self.rect.x = x
@@ -20,14 +29,21 @@ class Image:
     def draw(self, window: Surface) -> None:
         """
         Draws image on specified place.
-        :param window:
-        :return:
+        :param window: Application window where the board will be drawn.
+        :return: (None) Only draws an image on the window.
         """
         window.blit(self.image, self.rect)
 
 
 class Bank:
+    """
+    Class representing bank of animals and dogs.
+    """
+
     def __init__(self) -> None:
+        """
+        Initializes the bank.
+        """
         self.animals = {
             Animal.RABBIT: 60,
             Animal.SHEEP: 24,
@@ -43,6 +59,10 @@ class Bank:
     # end def
 
     def reset_bank(self) -> None:
+        """
+        Resets bank for restarting the game - sets it to initial values.
+        :return: (None) Only resets bank.
+        """
         self.animals = {
             Animal.RABBIT: 60,
             Animal.SHEEP: 24,
@@ -57,6 +77,10 @@ class Bank:
 
 
 class Animal(Enum):
+    """
+    Possible animals to keep.
+    """
+
     RABBIT = 0
     SHEEP = 1
     PIG = 2
@@ -68,6 +92,10 @@ class Animal(Enum):
 
 
 class Defence(Enum):
+    """
+    Possible dogs to buy for defence from predators.
+    """
+
     SMALLDOG = 6
     BIGDOG = 7
 
@@ -76,13 +104,17 @@ class Defence(Enum):
 
 
 class Predators(Enum):
+    """
+    Possible predators which can attack farm.
+    """
+
     FOX = 10
     WOLF = 11
 
 
 # end enum
 
-
+"""Dictionary representing cost of exchanging animals."""
 exchange_cost = {
     Animal.RABBIT: {Animal.SHEEP: 6, Animal.PIG: 12, Animal.COW: 36, Animal.HORSE: 72},
     Animal.SHEEP: {Animal.PIG: 2, Animal.COW: 6, Animal.HORSE: 12},
@@ -91,6 +123,15 @@ exchange_cost = {
     Animal.HORSE: {},
 }
 
+empty_dict = {
+    Animal.RABBIT: 0,
+    Animal.SHEEP: 0,
+    Animal.PIG: 0,
+    Animal.COW: 0,
+    Animal.HORSE: 0,
+}
+
+"""Animals which can be drawn on orange dice."""
 animals1 = [
     Animal.RABBIT,
     Animal.RABBIT,
@@ -106,6 +147,7 @@ animals1 = [
     Predators.FOX,
 ]
 
+"""Animals which can be drawn on blue dice."""
 animals2 = [
     Animal.RABBIT,
     Animal.RABBIT,
@@ -121,12 +163,15 @@ animals2 = [
     Predators.WOLF,
 ]
 
+
+"""Colors of elements used in the game"""
 blue = (52, 229, 235)
 white = (255, 255, 255)
 red = (255, 0, 0)
 black = (0, 0, 0)
 dark_grey = (59, 59, 59)
 green = (0, 255, 0)
+grass_color = (124, 252, 0)
 dark_green = (0, 125, 0)
 blue2 = (93, 190, 194)
 blue3 = (38, 125, 128)
@@ -134,6 +179,10 @@ light_yellow = (238, 255, 125)
 
 
 def rand_animals() -> tuple[Animal, Animal]:
+    """
+    Function drawing animals from dices.
+    :return: (tuple[Animal, Animal]) Tuple of drawn animals.
+    """
     rand1 = random.randint(0, 11)
     rand2 = random.randint(0, 11)
 
@@ -144,6 +193,11 @@ def rand_animals() -> tuple[Animal, Animal]:
 
 
 def convert_animal_to_img(animal: Animal) -> Surface:
+    """
+    Converts animal to image.
+    :param animal: Specifies the animal to be converted.
+    :return: Animal image.
+    """
     img = None
     if not isinstance(animal, Animal) and not isinstance(animal, Predators):
         print("Nie zwierzę ", animal)
@@ -178,30 +232,36 @@ def convert_animal_to_img(animal: Animal) -> Surface:
 # end def
 
 
-def convert_animal_to_dice_img(animal: Animal, k: int) -> Surface:
+def convert_animal_to_dice_img(animal: Animal, dice_number: int) -> Surface:
+    """
+    Converts animal to dice image.
+    :param animal: Animal to be converted.
+    :param dice_number: Number of dice - 1 for blue dice and 2 for orange dice.
+    :return:
+    """
     img = None
     if animal.value == Animal.RABBIT.value:
-        if k == 1:
+        if dice_number == 1:
             img = py.image.load("Images/bunnydice.png")
-        elif k == 2:
+        elif dice_number == 2:
             img = py.image.load("Images/bunnydice2.png")
     if animal.value == Animal.SHEEP.value:
-        if k == 1:
+        if dice_number == 1:
             img = py.image.load("Images/sheepdice.png")
-        elif k == 2:
+        elif dice_number == 2:
             img = py.image.load("Images/sheepdice2.png")
     if animal.value == Animal.PIG.value:
-        if k == 1:
+        if dice_number == 1:
             img = py.image.load("Images/pigdice.png")
-        elif k == 2:
+        elif dice_number == 2:
             img = py.image.load("Images/pigdice2.png")
-    if animal.value == Animal.COW.value and k == 1:
+    if animal.value == Animal.COW.value and dice_number == 1:
         img = py.image.load("Images/cowdice2.png")
-    if animal.value == Animal.HORSE.value and k == 2:
+    if animal.value == Animal.HORSE.value and dice_number == 2:
         img = py.image.load("Images/horsedice.png")
-    if animal.value == Predators.FOX.value and k == 2:
+    if animal.value == Predators.FOX.value and dice_number == 2:
         img = py.image.load("Images/Foxdice.png")
-    if animal.value == Predators.WOLF.value and k == 1:
+    if animal.value == Predators.WOLF.value and dice_number == 1:
         img = py.image.load("Images/wolfdice.png")
     return img
 

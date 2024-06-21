@@ -5,6 +5,8 @@ from pygame import Surface
 from pygame.locals import *
 
 import util
+from animations import (dog_defence_animation, fox_attack_animation,
+                        wolf_attack_animation)
 from board_initializer import BoardInitializer
 from exchange_mechanism import ExchangeMechanism
 from interaction_actions import check_win, get_clicked_circle, is_mouse_over
@@ -17,6 +19,7 @@ class GameLogic:
     """
     Class responsible for tracking all actions happening during gameplay.
     """
+
     def __init__(
         self,
         window: Surface,
@@ -24,6 +27,13 @@ class GameLogic:
         players: list[Player],
         starting_player_number: int = 0,
     ) -> None:
+        """
+        Initializes game logic mechanism.
+        :param window: Application window where the board will be drawn.
+        :param board: Game board.
+        :param players: List of players playing.
+        :param starting_player_number: Identification of the player who is supposed to start.
+        """
         self.window = window
         self.board = board
         self.players = players
@@ -38,8 +48,8 @@ class GameLogic:
         """
         It is responsible for whole game logic and gameplay.
         Returns True if someone won or False otherwise.
-        :param event:
-        :return: bool
+        :param event: An event which happened in the application window.
+        :return: (bool) True if someone won or False otherwise.
         """
         someone_won = False
         self.clock.tick(50)
@@ -115,18 +125,79 @@ class GameLogic:
                     100,
                 )
 
-                print(res1, res2)
-                if res1 == util.Predators.FOX:
-                    message = f"Oh no, there was a fox attack on player {self.player_turn + 1}!"
-                elif res1 == util.Defence.SMALLDOG:
-                    message = f"The small dog saved player {self.player_turn + 1} from fox attack!"
-                if res2 == util.Predators.WOLF:
-                    message = f"Oh no, there was a wolf attack on player {self.player_turn + 1}!"
-                elif res2 == util.Defence.BIGDOG:
-                    message = f"The big dog saved player {self.player_turn + 1} from wolf attack!"
+                wolf_attack2 = py.image.load("Images/wolfattack2.png").convert_alpha()
+                fox_attack = py.image.load("Images/foxattack.png").convert_alpha()
+
                 if res1 == util.Predators.FOX and res2 == util.Predators.WOLF:
                     message = f"Oh no, there was a fox-and-wolf attack on player {self.player_turn + 1}!"
-                    print("AAA")
+
+                    fox_attack_animation(
+                        self.clock,
+                        100,
+                        self.window,
+                        self.board,
+                        self.players[self.player_turn],
+                        animals_before,
+                    )
+
+                    wolf_attack_animation(
+                        self.clock,
+                        60,
+                        self.window,
+                        self.players[self.player_turn],
+                        self.board,
+                        animals_before,
+                    )
+                elif res1 == util.Predators.FOX:
+                    message = f"Oh no, there was a fox attack on player {self.player_turn + 1}!"
+
+                    fox_attack_animation(
+                        self.clock,
+                        100,
+                        self.window,
+                        self.board,
+                        self.players[self.player_turn],
+                        animals_before,
+                    )
+
+                elif res1 == util.Defence.SMALLDOG:
+                    message = f"The small dog saved player {self.player_turn + 1} from fox attack!"
+
+                    dog_defence_animation(
+                        small_dog,
+                        fox_attack,
+                        self.clock,
+                        100,
+                        self.window,
+                        self.players[self.player_turn],
+                        120,
+                        self.board,
+                    )
+
+                elif res2 == util.Predators.WOLF:
+                    message = f"Oh no, there was a wolf attack on player {self.player_turn + 1}!"
+                    wolf_attack_animation(
+                        self.clock,
+                        60,
+                        self.window,
+                        self.players[self.player_turn],
+                        self.board,
+                        animals_before,
+                    )
+
+                elif res2 == util.Defence.BIGDOG:
+                    message = f"The big dog saved player {self.player_turn + 1} from wolf attack!"
+
+                    dog_defence_animation(
+                        big_dog,
+                        wolf_attack2,
+                        self.clock,
+                        100,
+                        self.window,
+                        self.players[self.player_turn],
+                        120,
+                        self.board,
+                    )
 
                 alert = self.board.font.render(message, True, white)
                 self.window.blit(alert, (self.info_rect[0], self.info_rect[1]))
@@ -159,7 +230,6 @@ class GameLogic:
                 self.player_turn %= 2
 
             if is_mouse_over(self.board.small_dog_button):
-                # Small dog icon clicked
                 animals_before = deepcopy(self.players[self.player_turn].animals)
                 result = self.players[self.player_turn].buy_small_dog(self.bank)
                 if result == -1:
@@ -195,7 +265,6 @@ class GameLogic:
                 py.display.flip()
 
             if is_mouse_over(self.board.big_dog_button):
-                # Big dog icon clicked
                 animals_before = deepcopy(self.players[self.player_turn].animals)
                 result = self.players[self.player_turn].buy_big_dog(self.bank)
                 if result == -1:
@@ -238,7 +307,7 @@ class GameLogic:
     def check_turn(self) -> None:
         """
         Function responsible for drawing proper arrows according to player turn.
-        :return:
+        :return: (None) Only draws.
         """
 
         red_arrow = py.image.load("Images/down-arrow.png")
@@ -257,6 +326,12 @@ class GameLogic:
     # end def
 
     def restart_game(self, board: BoardInitializer, starting_player_number: int):
+        """
+        Function responsible for restarting the game.
+        :param board: Game board.
+        :param starting_player_number: Identification of the player who is supposed to start the game.
+        :return: (None) Resets the GameLogic instance.
+        """
         self.board = board
         self.players = create_players(board.no_players)
         self.player_turn = starting_player_number
@@ -265,3 +340,6 @@ class GameLogic:
         self.exc_mech.bank = self.bank
 
     # end def
+
+
+# end class

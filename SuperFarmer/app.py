@@ -11,10 +11,22 @@ from players_data import create_players
 
 class App:
     def __init__(self, no_players: int = 2) -> None:
+        """
+        Initializes application.
+        :param no_players: Number of players playing.
+        """
         self.players = create_players(no_players)
         App.running = True
+        """
+        Attribute running specifies whether the application is still running.
+        """
 
     def play(self) -> None:
+        """
+        Function responsible for application work.
+        It starts the application, shows menu, provide game and allows to restart the game after somebody win.
+        :return: (None) Only do its own tasks and supervises work of another classes.
+        """
         py.init()
 
         WINWIDTH = 1500
@@ -72,7 +84,7 @@ class App:
                         WINDOW,
                         "Player " + str(game_logic.win.index(True)) + " won! Congrats!",
                         board.font,
-                        game_logic.info_rect
+                        game_logic.info_rect,
                     )
                     py.display.flip()
                     py.time.delay(2000)
@@ -80,6 +92,8 @@ class App:
             py.display.flip()
 
         py.quit()
+
+    # end def
 
 
 # end class
